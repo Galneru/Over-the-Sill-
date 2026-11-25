@@ -154,6 +154,24 @@ img{max-width:100%}
 .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;padding:14px;background:var(--gold);color:var(--espresso);font-weight:700;font-size:14px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.35);transition:filter .2s}
 @media (hover:hover){.cta:hover{filter:brightness(1.07)}}
 .cta-note{margin:8px 0 0;text-align:center;font-size:11.5px;color:var(--text-3)}
+.cta2{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;margin-top:10px;padding:12px;background:var(--espresso);color:var(--text);border:1px solid var(--terra-line);font-weight:500;font-size:14px;border-radius:12px;transition:border-color .2s,background .2s}
+.cta2 .ic:first-child{color:var(--terra)}
+@media (hover:hover){.cta2:hover{border-color:var(--terra);background:var(--terra-soft)}}
+.d-add{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;padding:10px;font-size:12.5px;color:var(--gold);border:1px dashed var(--gold-line);border-radius:10px}
+
+/* TMDB 검색 결과 */
+.ext{margin-top:22px}
+.ext-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.ext-h h3{margin:0;font:700 14px/1.4 var(--serif);color:var(--text-2);display:flex;align-items:center;gap:8px}
+.ext-h h3 .ic{color:var(--gold)}
+.ext-h small{font-size:11px;color:var(--text-3)}
+.ext-status{margin:8px 0;font-size:12.5px;color:var(--text-3);text-align:center}
+.card.x-card .poster{width:72px;height:108px}
+.card.x-card h3{font-size:15px}
+.x-src{display:inline-block;font-size:10px;letter-spacing:.08em;color:var(--text-3);border:1px solid var(--line);padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:2px}
+.x-ov{margin:6px 0 0;font-size:12px;line-height:1.55;color:var(--text-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.d-loading{padding:56px 0;text-align:center;color:var(--text-3);font-size:13px}
+.credit{margin:12px 0 0;font-size:11px;color:var(--text-3);text-align:center}
 
 /* region */
 .r-h{margin:0;padding-right:44px;font:700 16px/1.4 var(--serif);display:flex;align-items:center;gap:8px}
@@ -253,6 +271,7 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.55}
 <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
 <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
 <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="3.5"/><path d="M10 9.2v5.6l4.8-2.8z"/></symbol>
 <symbol id="i-cross" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol>
 </defs></svg>
 
@@ -271,7 +290,7 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.55}
     </div>
     <div class="search">
       <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
-      <input id="searchInput" type="text" inputmode="search" autocomplete="off" placeholder="영화 제목, 감독, 키워드로 검색" aria-label="영화 검색">
+      <input id="searchInput" type="text" inputmode="search" autocomplete="off" placeholder="릴스에서 본 그 영화 혹은 다른 영화 검색" aria-label="영화 검색">
       <button id="clearSearch" type="button" hidden aria-label="검색어 지우기"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
     <div class="moods" id="moodFilters"></div>
@@ -293,6 +312,11 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.55}
       <small>다른 키워드나 분위기 태그를 골라보세요.</small><br>
       <button class="btn-line" type="button" onclick="resetFilters()">전체 보기</button>
     </div>
+    <section id="extSection" class="ext" hidden aria-live="polite">
+      <div class="ext-h"><h3><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>모든 영화에서 찾기</h3><small>제목·감독으로 검색</small></div>
+      <p id="extStatus" class="ext-status"></p>
+      <div id="extGrid" class="grid"></div>
+    </section>
   </main>
 
   <section class="pager gutter">
@@ -372,6 +396,7 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.55}
         <div class="fld"><label for="fCategory">카테고리</label>
           <select id="fCategory" class="in"><option value="recent">최근 개봉작</option><option value="past">과거 예술영화 (명작)</option></select></div>
         <div class="fld"><label for="fTitle">영화 제목 *</label><input id="fTitle" class="in" type="text" required placeholder="제목 입력"></div>
+        <input id="fTmdbId" type="hidden">
         <div class="g3">
           <div class="fld"><label for="fYear">개봉연도</label><input id="fYear" class="in" type="text" inputmode="numeric" placeholder="2024"></div>
           <div class="fld"><label for="fDirector">감독</label><input id="fDirector" class="in" type="text" placeholder="감독명"></div>
@@ -416,8 +441,8 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.55}
           <div class="fld"><label for="cBranch">브랜치</label><input id="cBranch" class="in" type="text" placeholder="main" autocapitalize="off"></div>
           <div class="fld"><label for="cToken">접근 토큰</label><input id="cToken" class="in" type="password" placeholder="github_pat_..." autocomplete="off"></div>
         </div>
-        <div class="fld"><label for="cTmdb">TMDB API 키</label><input id="cTmdb" class="in" type="password" placeholder="TMDB API 키" autocomplete="off"></div>
-        <p class="hint">토큰과 키는 지금 쓰는 이 브라우저에만 저장되고, 사이트 코드에는 들어가지 않습니다.</p>
+        <div class="fld"><label for="cTmdb">TMDB API 키 (비워두면 사이트 기본 키 사용)</label><input id="cTmdb" class="in" type="password" placeholder="기본 키 사용 중" autocomplete="off"></div>
+        <p class="hint">GitHub 토큰은 지금 쓰는 이 브라우저에만 저장되고, 사이트 코드에는 들어가지 않습니다.</p>
         <div class="row" style="margin-top:4px">
           <button class="btn sm" type="button" onclick="testConn()">연결 확인</button>
           <button class="btn gold sm" type="button" onclick="saveCfg()" style="flex:1">설정 저장</button>
@@ -468,12 +493,17 @@ const ART = [['#3A2A1F','#14100D'],['#2B3A3A','#0F1514'],['#3B2430','#140E11'],[
 const PIN = '9754';
 const TMDB = 'https://api.themoviedb.org/3';
 const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
+const TMDB_THUMB = 'https://image.tmdb.org/t/p/w185';
+/* 방문자 검색·예고편용 TMDB 키 (읽기 전용). 개발자 콘솔에서 다른 키로 바꿀 수 있습니다. */
+const TMDB_KEY = 'b64d842133a3ec10d1a10d3becc4b67f';
 
 /* ---- 상태 ---- */
 let movies = [];
 let category = 'recent', mood = '#전체', query = '';
 const limits = {recent:6, past:6};
 let editingId = null, armedId = null, armedTimer = null, resetArmed = false, saving = false, devUnlocked = false, toastTimer = null, lastTmdb = [];
+let extTimer = null, extSeq = 0, detailSeq = 0;
+const tmdbCache = {};
 let stats = {visits:0, hash:0, clicks:0};
 
 const $ = id => document.getElementById(id);
@@ -501,7 +531,7 @@ function getCfg(){
   c.branch = c.branch || 'main';
   return c;
 }
-const tmdbKey = () => (LS.get('sill_tmdb') || '').trim();
+const tmdbKey = () => (LS.get('sill_tmdb') || '').trim() || TMDB_KEY;
 const ghHeaders = cfg => ({'Authorization':'Bearer ' + cfg.token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28'});
 const ghUrl = cfg => 'https://api.github.com/repos/' + cfg.repo + '/contents/movies.json';
 const b64 = str => btoa(unescape(encodeURIComponent(str)));
@@ -575,9 +605,137 @@ async function tmdb(path, params){
   u.searchParams.set('api_key', key);
   u.searchParams.set('language', 'ko-KR');
   Object.keys(params || {}).forEach(k => u.searchParams.set(k, params[k]));
+  const ck = u.toString();
+  if (tmdbCache[ck]) return tmdbCache[ck];
   const r = await fetch(u);
   if (!r.ok) throw {status:r.status};
-  return r.json();
+  const d = await r.json();
+  tmdbCache[ck] = d;
+  return d;
+}
+
+/* ---- 예고편 ---- */
+function ytSearchUrl(title, year){ return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(title + ' ' + (year || '') + ' 예고편'); }
+function pickTrailer(list){
+  const yt = (list || []).filter(v => v.site === 'YouTube' && /^[\w-]{6,20}$/.test(v.key || ''));
+  if (!yt.length) return null;
+  const score = v => (v.type === 'Trailer' ? 8 : v.type === 'Teaser' ? 4 : 0) + (v.iso_639_1 === 'ko' ? 3 : 0) + (v.official ? 1 : 0);
+  return yt.sort((a, b) => score(b) - score(a))[0];
+}
+async function findTmdbId(m){
+  if (m.tmdbId) return m.tmdbId;
+  const s = await tmdb('/search/movie', {query:m.title});
+  const y = parseInt(m.year, 10) || 0;
+  const hit = (s.results || []).find(r => { const ry = parseInt((r.release_date || '').slice(0, 4), 10) || 0; return !y || (ry && Math.abs(ry - y) <= 1); });
+  return hit ? hit.id : null;
+}
+async function trailerUrl(tmdbId){
+  const d = await tmdb('/movie/' + tmdbId + '/videos', {include_video_language:'ko,en,null'});
+  const v = pickTrailer(d.results);
+  return v ? 'https://www.youtube.com/watch?v=' + v.key : null;
+}
+/* 버튼은 먼저 유튜브 검색으로 연결해 두고, TMDB에서 예고편을 찾으면 영상 주소로 바꿉니다. */
+async function resolveTrailer(m, seq){
+  try {
+    const id = await findTmdbId(m);
+    if (!id) return;
+    const url = await trailerUrl(id);
+    const a = $('trailerBtn');
+    if (url && a && seq === detailSeq) { a.href = url; a.dataset.direct = '1'; }
+  } catch(e) {}
+}
+function trailerBtnHtml(title, year){
+  return '<a id="trailerBtn" class="cta2" href="' + esc(ytSearchUrl(title, year)) + '" target="_blank" rel="noopener noreferrer" data-act="trailer">' + ic('play') + '<span>예고편 바로가기</span>' + ic('ext') + '</a>';
+}
+
+/* ---- 모든 영화 검색 (TMDB) ---- */
+function scheduleExt(){
+  clearTimeout(extTimer);
+  const q = $('searchInput').value.trim();
+  if (!q) { extSeq++; $('extSection').hidden = true; $('extGrid').innerHTML = ''; return; }
+  $('extSection').hidden = false;
+  $('extStatus').hidden = false; $('extStatus').textContent = '찾는 중…';
+  extTimer = setTimeout(() => searchExt(q), 400);
+}
+async function searchExt(q){
+  const seq = ++extSeq;
+  try {
+    const [mv, pp] = await Promise.all([
+      tmdb('/search/movie', {query:q, include_adult:'false'}),
+      tmdb('/search/person', {query:q, include_adult:'false'}).catch(() => ({results:[]}))
+    ]);
+    let list = (mv.results || []).slice(0, 12);
+    const dirs = (pp.results || []).filter(p => p.known_for_department === 'Directing').slice(0, 2);
+    for (const p of dirs) {
+      const c = await tmdb('/person/' + p.id + '/movie_credits', {});
+      const directed = (c.crew || []).filter(x => x.job === 'Director' && !x.adult).sort((a, b) => (b.popularity || 0) - (a.popularity || 0)).slice(0, 12);
+      list = list.concat(directed);
+    }
+    if (seq !== extSeq) return;
+    const seen = {};
+    list = list.filter(x => x && x.id && !seen[x.id] && (seen[x.id] = true)).sort((a, b) => (b.popularity || 0) - (a.popularity || 0)).slice(0, 20);
+    const status = $('extStatus');
+    if (!list.length) { status.hidden = false; status.textContent = '“' + q + '”에 맞는 영화를 찾지 못했습니다.'; $('extGrid').innerHTML = ''; return; }
+    status.hidden = true;
+    $('extGrid').innerHTML = list.map(extCardHtml).join('');
+  } catch(e) {
+    if (seq !== extSeq) return;
+    $('extStatus').hidden = false; $('extStatus').textContent = tmdbErr(e); $('extGrid').innerHTML = '';
+  }
+}
+function extPoster(x, lg){
+  const t = {id:'tmdb-' + x.id, title:x.title || x.original_title || '', year:(x.release_date || '').slice(0, 4), director:''};
+  if (x.poster_path && /^\/[\w.-]+$/.test(x.poster_path)) return '<img src="' + (lg ? TMDB_IMG : TMDB_THUMB) + esc(x.poster_path) + '" alt="' + esc(t.title) + ' 포스터" loading="lazy" referrerpolicy="no-referrer">';
+  return artHtml(t, lg);
+}
+function extCardHtml(x){
+  const year = (x.release_date || '').slice(0, 4);
+  const sub = [year, (x.original_title && x.original_title !== x.title) ? x.original_title : ''].filter(Boolean).join(' · ');
+  return '<article class="card x-card" role="button" tabindex="0" data-tmdb="' + esc(x.id) + '"><div class="poster">' + extPoster(x, false) + '</div><div class="info"><div><div class="meta">' + esc(sub) + '</div><h3>' + esc(x.title || x.original_title) + '</h3>' + (x.overview ? '<p class="x-ov">' + esc(x.overview) + '</p>' : '') + '</div></div></article>';
+}
+async function openTmdbDetail(id){
+  const seq = ++detailSeq;
+  const local = movies.find(m => String(m.tmdbId) === String(id));
+  if (local) { openDetail(local.id); return; }
+  $('detailContent').innerHTML = '<p class="d-loading">영화 정보를 불러오는 중…</p>';
+  openModal('detailModal');
+  try {
+    const d = await tmdb('/movie/' + id, {append_to_response:'credits'});
+    if (seq !== detailSeq) return;
+    const title = d.title || d.original_title || '';
+    const year = (d.release_date || '').slice(0, 4);
+    const director = directorsOf(d);
+    const meta = [year, d.runtime ? d.runtime + '분' : '', director ? '감독: ' + director : ''].filter(Boolean).join('  |  ');
+    const genres = (d.genres || []).map(g => g.name).filter(Boolean);
+    const tags = genres.length ? '<div class="d-tags">' + genres.map(g => '<span>' + esc(g) + '</span>').join('') + '</div>' : '';
+    const syn = '<div class="d-sec"><h4>시놉시스</h4><p>' + (d.overview ? esc(d.overview) : '등록된 한국어 줄거리가 없습니다.') + '</p></div>';
+    const href = 'https://search.naver.com/search.naver?query=' + encodeURIComponent(title + ' 상영시간표');
+    const addBtn = devUnlocked ? '<button class="d-add" type="button" data-act="addext" data-tmdb="' + esc(d.id) + '">' + ic('plus') + '<span>문턱너머 목록에 추가하기</span></button>' : '';
+    $('detailContent').innerHTML =
+      '<div class="d-head"><div class="d-poster">' + extPoster(d, true) + '</div><span class="badge">모든 영화 검색</span><h2>' + esc(title) + '</h2><p class="d-meta">' + esc(meta) + '</p></div>' +
+      tags + syn +
+      '<a class="cta" href="' + href + '" target="_blank" rel="noopener noreferrer" data-act="naver">' + ic('clock') + '<span>실시간 상영시간표 바로보기</span>' + ic('ext') + '</a>' +
+      trailerBtnHtml(title, year) + addBtn +
+      '<p class="credit">영화 정보 제공: TMDB</p>';
+    resolveTrailer({tmdbId:d.id, title:title, year:year}, seq);
+  } catch(e) {
+    if (seq !== detailSeq) return;
+    $('detailContent').innerHTML = '<p class="d-loading">' + esc(tmdbErr(e)) + '</p>';
+  }
+}
+async function addExtToForm(id){
+  try {
+    const d = await tmdb('/movie/' + id, {append_to_response:'credits'});
+    cancelEdit();
+    $('fTitle').value = d.title || ''; $('fTmdbId').value = d.id;
+    $('fYear').value = (d.release_date || '').slice(0, 4);
+    $('fDirector').value = directorsOf(d);
+    $('fRuntime').value = d.runtime ? d.runtime + '분' : '';
+    $('fPoster').value = d.poster_path ? TMDB_IMG + d.poster_path : ''; previewPoster();
+    $('fSynopsis').value = d.overview || '';
+    closeModal('detailModal'); openConsole('add');
+    toast('채웠습니다. 한줄평과 해시태그를 입력하고 등록하세요.');
+  } catch(e) { toast(tmdbErr(e)); }
 }
 function tmdbErr(e){
   if (e && e.nokey) return '설정·지표 탭에 TMDB API 키를 먼저 입력해주세요.';
@@ -608,6 +766,7 @@ async function pickTmdb(idx){
   try {
     const d = await tmdb('/movie/' + m.id, {append_to_response:'credits'});
     $('fTitle').value = d.title || m.title || '';
+    $('fTmdbId').value = d.id;
     if (d.release_date) $('fYear').value = d.release_date.slice(0, 4);
     $('fDirector').value = directorsOf(d);
     if (d.runtime) $('fRuntime').value = d.runtime + '분';
@@ -623,7 +782,7 @@ async function fillMissing(){
   let changed = 0;
   toast('TMDB에서 빈 정보를 찾는 중…', true);
   for (const m of next) {
-    if (m.poster && m.director && m.runtime) continue;
+    if (m.poster && m.director && m.runtime && m.tmdbId) continue;
     try {
       const s = await tmdb('/search/movie', {query:m.title});
       const y = parseInt(m.year, 10) || 0;
@@ -631,6 +790,7 @@ async function fillMissing(){
       if (!hit) { skipped.push(m.title); continue; }
       const d = await tmdb('/movie/' + hit.id, {append_to_response:'credits'});
       let did = false;
+      if (!m.tmdbId) { m.tmdbId = d.id; did = true; }
       if (!m.poster && d.poster_path) { m.poster = TMDB_IMG + d.poster_path; did = true; }
       if (!m.director && directorsOf(d)) { m.director = directorsOf(d); did = true; }
       if (!m.runtime && d.runtime) { m.runtime = d.runtime + '분'; did = true; }
@@ -706,7 +866,7 @@ function cardHtml(m){
 function renderFeed(){
   const list = filtered(category);
   $('count').textContent = list.length;
-  if (!list.length) { $('grid').innerHTML = ''; $('empty').hidden = false; }
+  if (!list.length) { $('grid').innerHTML = ''; $('empty').hidden = !!query; }
   else { $('empty').hidden = true; $('grid').innerHTML = list.slice(0, limits[category]).map(cardHtml).join(''); }
   const r = filtered('recent').length, p = filtered('past').length;
   $('moreRecentText').textContent = (r <= limits.recent && limits.recent > 6) ? '최근영화 접기' : '최근영화 더보기';
@@ -727,6 +887,7 @@ function pageMore(cat){
 }
 function resetFilters(){
   mood = '#전체'; query = ''; $('searchInput').value = ''; $('clearSearch').hidden = true;
+  scheduleExt();
   renderAll();
 }
 
@@ -745,8 +906,10 @@ function openDetail(id){
     '<div class="d-head"><div class="d-poster">' + posterHtml(m, true) + '</div><span class="badge">' + (m.category === 'recent' ? '최근 개봉작' : '과거 예술명작') + '</span><h2>' + esc(m.title) + '</h2><p class="d-meta">' + esc(meta) + '</p></div>' +
     q + tags + syn + g +
     '<a class="cta" href="' + href + '" target="_blank" rel="noopener noreferrer" data-act="naver">' + ic('clock') + '<span>실시간 상영시간표 바로보기</span>' + ic('ext') + '</a>' +
-    '<p class="cta-note">네이버 검색 결과에서 지역과 극장을 골라 시간을 확인하세요.</p>';
+    trailerBtnHtml(m.title, m.year) +
+    '<p class="cta-note">상영시간표는 네이버 검색 결과에서 지역과 극장을 골라 확인하세요.</p>';
   openModal('detailModal');
+  resolveTrailer(m, ++detailSeq);
 }
 
 /* ---- 모달 공통 ---- */
@@ -789,11 +952,11 @@ function verifyPin(){
   if ($('pinInput').value.trim() === PIN) { devUnlocked = true; closeModal('pinModal'); openConsole(); }
   else { $('pinErr').hidden = false; }
 }
-function openConsole(){
+function openConsole(tab){
   const c = getCfg();
-  $('cRepo').value = c.repo || ''; $('cBranch').value = c.branch || 'main'; $('cToken').value = c.token || ''; $('cTmdb').value = tmdbKey();
+  $('cRepo').value = c.repo || ''; $('cBranch').value = c.branch || 'main'; $('cToken').value = c.token || ''; $('cTmdb').value = (LS.get('sill_tmdb') || '').trim();
   renderManage(); renderStats();
-  devTab(c.token && c.repo ? 'add' : 'links');
+  devTab(tab || (c.token && c.repo ? 'add' : 'links'));
   openModal('devModal');
 }
 function devTab(t){
@@ -857,6 +1020,7 @@ function fillForm(m){
   $('fRuntime').value = m.runtime || ''; $('fQuote').value = m.quote || ''; $('fTags').value = (m.hashtags || []).join(', ');
   $('fSynopsis').value = m.synopsis || ''; $('fGoodsName').value = m.goodsName || ''; $('fGoodsTheater').value = m.goodsTheater || ''; $('fGoodsStatus').value = m.goodsStatus || '';
   $('fPoster').value = m.poster || ''; previewPoster();
+  $('fTmdbId').value = m.tmdbId || '';
 }
 function startEdit(id){
   const m = movies.find(x => x.id === id); if (!m) return;
@@ -866,7 +1030,7 @@ function startEdit(id){
   devTab('add');
 }
 function cancelEdit(){
-  editingId = null; $('movieForm').reset(); previewPoster();
+  editingId = null; $('movieForm').reset(); $('fTmdbId').value = ''; previewPoster();
   $('editBanner').hidden = true; $('fSubmit').textContent = '새 영화 등록하기';
 }
 async function submitMovie(ev){
@@ -881,6 +1045,8 @@ async function submitMovie(ev){
     poster: v('fPoster'), quote: v('fQuote'), hashtags: tags, synopsis: v('fSynopsis'),
     goodsName: v('fGoodsName'), goodsTheater: v('fGoodsTheater'), goodsStatus: v('fGoodsStatus')
   };
+  const tid = parseInt(v('fTmdbId'), 10);
+  if (tid) item.tmdbId = tid;
   const wasEdit = !!editingId;
   const next = wasEdit ? movies.map(m => m.id === editingId ? item : m) : [item].concat(movies);
   const ok = await saveMovies(next, wasEdit ? '수정했습니다.' : '등록했습니다.');
@@ -912,10 +1078,14 @@ document.addEventListener('click', e => {
   if (reg) { setRegion(reg.dataset.region); closeModal('regionModal'); return; }
   const card = tg.closest('.card[data-id]');
   if (card) { openDetail(card.dataset.id); return; }
+  const xcard = tg.closest('.card[data-tmdb]');
+  if (xcard) { openTmdbDetail(xcard.dataset.tmdb); return; }
   const act = tg.closest('[data-act]');
   if (act) {
     const id = act.dataset.id;
-    if (act.dataset.act === 'tpick') pickTmdb(parseInt(act.dataset.idx, 10));
+    if (act.dataset.act === 'trailer') return;
+    if (act.dataset.act === 'addext') addExtToForm(act.dataset.tmdb);
+    else if (act.dataset.act === 'tpick') pickTmdb(parseInt(act.dataset.idx, 10));
     else if (act.dataset.act === 'edit') startEdit(id);
     else if (act.dataset.act === 'link') copyText(baseUrl() + '#film-' + id);
     else if (act.dataset.act === 'del') {
@@ -931,7 +1101,10 @@ document.addEventListener('keydown', e => {
     const open = [...document.querySelectorAll('.modal')].filter(m => !m.hidden).pop();
     if (open) closeModal(open.id);
   }
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card')) { e.preventDefault(); openDetail(e.target.dataset.id); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card')) {
+    e.preventDefault();
+    if (e.target.dataset.tmdb) openTmdbDetail(e.target.dataset.tmdb); else openDetail(e.target.dataset.id);
+  }
   if (e.key === 'Enter' && e.target.id === 'pinInput') verifyPin();
   if (e.key === 'Enter' && e.target.id === 'tmdbQ') { e.preventDefault(); searchTmdb(); }
 });
@@ -940,8 +1113,9 @@ $('searchInput').addEventListener('input', e => {
   $('clearSearch').hidden = !e.target.value;
   limits.recent = 6; limits.past = 6;
   renderFeed();
+  scheduleExt();
 });
-$('clearSearch').addEventListener('click', () => { $('searchInput').value = ''; query = ''; $('clearSearch').hidden = true; renderFeed(); });
+$('clearSearch').addEventListener('click', () => { $('searchInput').value = ''; query = ''; $('clearSearch').hidden = true; renderFeed(); scheduleExt(); });
 window.addEventListener('hashchange', applyHash);
 function applyHash(){
   const h = (location.hash || '').slice(1);
