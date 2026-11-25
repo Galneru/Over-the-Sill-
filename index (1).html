@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#12100E">
+<title>문턱너머 | 독립 &amp; 예술영화 원스톱 네비게이터</title>
+<meta name="description" content="단 한 번의 만남으로, 예술영화의 벽을 허물다. 독립·예술영화를 분위기별로 만나고 상영시간표까지 한 번에 확인하세요.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="문턱너머 | 독립 &amp; 예술영화 원스톱 네비게이터">
+<meta property="og:description" content="단 한 번의 만남으로, 예술영화의 벽을 허물다.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4A359' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='8' width='18' height='12' rx='1.5'/%3E%3Cpath d='m3 8 2.5-4.5 4 1.2L7 9M9.5 4.7l4 1.2L11 10M13.5 5.9l4 1.2L15 11'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700;900&display=swap">
+<style>
+/* Layout: 460px 모바일 컬럼. 상단 고정 헤더(검색·분위기 칩) → 목록 → 더보기 두 버튼 → 푸터. 어두운 에스프레소 바탕에 금색 포인트. */
+:root{
+  color-scheme:dark;
+  --ground:#0A0908; --espresso:#12100E; --glass:rgba(18,16,14,.96);
+  --paper:#1B1815; --elevated:#24201C; --line:#2E2924;
+  --text:#F2EDE4; --text-2:#BDB7AD; --text-3:#8E887E;
+  --gold:#D4A359; --gold-soft:rgba(212,163,89,.14); --gold-line:rgba(212,163,89,.38);
+  --terra:#C86D51; --terra-soft:rgba(200,109,81,.12); --terra-line:rgba(200,109,81,.4);
+  --scrim:rgba(0,0,0,.82);
+  --serif:"Noto Serif KR","Nanum Myeongjo",serif;
+  --sans:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--text);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+::selection{background:rgba(212,163,89,.3)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0;text-align:inherit}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.ic{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block;vertical-align:-.125em}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:90;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+.app{max-width:460px;margin:0 auto;background:var(--espresso);border-left:1px solid var(--line);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:100vh}
+
+/* header */
+.top{position:sticky;top:0;z-index:40;background:var(--glass);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:14px;padding-bottom:10px}
+.brand-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.brand h1{margin:0;font:700 24px/1.2 var(--serif);color:var(--gold);letter-spacing:.06em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font:400 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);border:1px solid var(--terra-line);padding:4px 6px;border-radius:4px}
+.brand p{margin:4px 0 0;font:400 12px/1.4 var(--serif);color:var(--text-2)}
+.loc{display:flex;align-items:center;gap:6px;flex:none;background:var(--paper);border:1px solid var(--line);padding:7px 11px;border-radius:999px;font-size:12px;color:var(--text);transition:border-color .2s;max-width:150px}
+.loc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.loc .ic:first-child{color:var(--gold)}
+.loc .ic:last-child{color:var(--text-3);font-size:10px}
+@media (hover:hover){.loc:hover{border-color:var(--gold-line)}}
+.search{position:relative;display:block;margin-top:12px}
+.search>.ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-3);font-size:14px}
+.search input{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 38px 10px 36px;font-size:16px;color:var(--text);transition:border-color .2s}
+.search input::placeholder{color:var(--text-3)}
+.search input:focus{outline:none;border-color:var(--gold)}
+.search button{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--text-3)}
+.moods{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none;-ms-overflow-style:none}
+.moods::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--text-2);font-size:12.5px;white-space:nowrap;transition:border-color .2s,color .2s}
+.chip.on{background:var(--gold);color:var(--espresso);border-color:var(--gold);font-weight:700}
+@media (hover:hover){.chip:not(.on):hover{border-color:var(--gold-line);color:var(--text)}}
+
+/* section bar */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:16px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.bar-l{display:flex;align-items:center;gap:8px;min-width:0}
+.bar-mark{width:5px;height:16px;border-radius:3px;background:var(--gold);flex:none}
+.bar h2{margin:0;font:700 16px/1.3 var(--serif)}
+.count{font-size:12px;background:var(--paper);color:var(--gold);border:1px solid var(--gold-line);padding:1px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+.seg{display:flex;gap:2px;background:var(--paper);border:1px solid var(--line);padding:2px;border-radius:8px;flex:none}
+.seg button{padding:6px 12px;border-radius:6px;font-size:12.5px;color:var(--text-2);transition:background .2s,color .2s}
+.seg button.on{background:var(--gold);color:var(--espresso);font-weight:700}
+
+/* feed */
+.feed{flex:1;padding-top:16px;padding-bottom:16px}
+.grid{display:flex;flex-direction:column;gap:14px}
+.loading{margin:48px 0;text-align:center;color:var(--text-3);font-size:13px}
+.card{display:flex;gap:14px;padding:14px;background:var(--paper);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:transform .25s ease,border-color .25s ease}
+@media (hover:hover){.card:hover{transform:translateY(-2px);border-color:var(--gold)}}
+.poster{width:96px;height:144px;flex:none;border-radius:8px;overflow:hidden;background:var(--elevated);box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.poster img{width:100%;height:100%;object-fit:cover;display:block}
+.info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:8px}
+.meta{font-size:12px;color:var(--text-3)}
+.card h3{margin:2px 0 0;font:700 17px/1.35 var(--serif);overflow-wrap:anywhere}
+.quote{margin:8px 0 0;font:italic 400 12.5px/1.55 var(--serif);color:var(--gold);background:rgba(27,24,21,.8);border-left:2px solid var(--gold);padding:6px 10px;border-radius:0 6px 6px 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.tags span{font-size:11px;background:var(--espresso);color:var(--text-2);border:1px solid var(--line);padding:2px 7px;border-radius:4px}
+.goods{display:flex;align-items:center;gap:6px;background:var(--terra-soft);border:1px solid var(--terra-line);color:var(--terra);padding:5px 8px;border-radius:6px;font-size:12px}
+.goods b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.goods i{margin-left:auto;font-style:normal;font-size:10.5px;border:1px solid var(--terra-line);padding:0 5px;border-radius:4px;flex:none;white-space:nowrap}
+
+/* 포스터 이미지가 없거나 불러오지 못할 때 */
+.art{width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:10px 9px;background:linear-gradient(160deg,var(--a),var(--b));border:1px solid var(--line);border-radius:8px;position:relative;overflow:hidden}
+.art::before{content:"";position:absolute;left:9px;right:9px;top:0;height:2px;background:var(--gold);opacity:.7}
+.art-y{font-size:10.5px;letter-spacing:.14em;color:var(--gold);font-variant-numeric:tabular-nums}
+.art-t{font:700 15px/1.3 var(--serif);color:var(--text);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.art-d{font-size:10.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art.lg{padding:14px 12px}
+.art.lg .art-t{font-size:19px}
+.art.lg .art-y,.art.lg .art-d{font-size:12px}
+
+.empty{padding:64px 0;text-align:center;color:var(--text-2)}
+.empty .ic{font-size:32px;color:var(--text-3);display:block;margin:0 auto 12px}
+.empty p{margin:0 0 4px;font-family:var(--serif)}
+.empty small{color:var(--text-3);font-size:12px}
+.btn-line{margin-top:16px;padding:9px 16px;background:var(--paper);border:1px solid var(--gold-line);color:var(--gold);border-radius:8px;font-size:13px;transition:background .2s,color .2s}
+.btn-line.wide{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:0;min-height:44px;background:var(--elevated)}
+@media (hover:hover){.btn-line:hover{background:var(--gold);color:var(--espresso)}}
+
+/* pager */
+.pager{padding-top:8px;padding-bottom:24px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pbtn{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 12px;background:var(--paper);border:1px solid var(--line);border-radius:8px;font-size:13px;font-weight:500;text-align:center;transition:border-color .2s}
+.pbtn.gold{color:var(--gold);border-color:var(--gold-line)}
+.pbtn .ic{color:var(--gold);font-size:12px}
+@media (hover:hover){.pbtn:hover{border-color:var(--gold)}}
+
+/* footer */
+.foot{border-top:1px solid var(--line);background:rgba(27,24,21,.6);padding-top:24px;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12px;color:var(--text-2)}
+.foot .rule{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;color:var(--gold);opacity:.7}
+.foot .rule::before,.foot .rule::after{content:"";width:32px;height:1px;background:var(--line)}
+.foot p{margin:0}
+.foot .name{font-family:var(--serif);font-weight:500;color:var(--text);margin-bottom:4px}
+.foot .copy{font-size:11px;color:var(--text-3);margin-bottom:14px}
+.dev-link{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;font-size:12px;color:var(--text-3);border:1px solid transparent;border-radius:6px;transition:color .2s,border-color .2s}
+@media (hover:hover){.dev-link:hover{color:var(--gold);border-color:var(--line)}}
+
+/* modals */
+.modal{position:fixed;inset:0;z-index:60;background:var(--scrim);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center}
+.sheet{position:relative;width:100%;max-width:450px;max-height:90vh;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:16px 16px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));scrollbar-width:none}
+.sheet::-webkit-scrollbar{display:none}
+@media (min-width:520px){.modal{align-items:center;padding:16px}.sheet{border-radius:16px}}
+.x{position:absolute;right:12px;top:12px;width:36px;height:36px;border-radius:50%;background:var(--espresso);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-2);z-index:2}
+.d-head{text-align:center;padding-top:6px}
+.d-poster{width:128px;height:192px;margin:0 auto 12px;border-radius:12px;overflow:hidden;background:var(--elevated);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.d-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{display:inline-block;font-size:11px;color:var(--gold);background:var(--gold-soft);border:1px solid var(--gold-line);padding:2px 10px;border-radius:999px;margin-bottom:6px}
+.d-head h2{margin:0 0 4px;font:700 22px/1.35 var(--serif);overflow-wrap:anywhere}
+.d-meta{margin:0 0 8px;font-size:12px;color:var(--text-3)}
+.d-quote{margin:12px 0;font:italic 400 14px/1.6 var(--serif);color:var(--gold);background:var(--espresso);border-left:2px solid var(--gold);padding:12px;border-radius:0 8px 8px 0}
+.d-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.d-tags span{font-size:12px;background:var(--espresso);color:var(--text-2);border:1px solid var(--line);padding:2px 10px;border-radius:999px}
+.d-sec{margin-bottom:16px}
+.d-sec h4{margin:0 0 8px;padding-bottom:4px;font:700 13px/1.4 var(--serif);color:var(--text-2);border-bottom:1px solid var(--line)}
+.d-sec p{margin:0;font-size:13.5px;line-height:1.75;color:var(--text-2)}
+.d-goods{background:var(--espresso);border:1px solid var(--terra-line);border-radius:12px;padding:12px;margin-bottom:16px}
+.d-goods .h{display:flex;align-items:center;gap:6px;color:var(--terra);font-size:12.5px;font-weight:700}
+.d-goods .n{margin:6px 0 0;font-size:13.5px;font-weight:500}
+.d-goods .f{display:flex;justify-content:space-between;gap:8px;margin-top:6px;padding-top:6px;border-top:1px solid var(--line);font-size:12px;color:var(--text-3)}
+.d-goods .f b{color:var(--terra);font-weight:500;text-align:right}
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;padding:14px;background:var(--gold);color:var(--espresso);font-weight:700;font-size:14px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.35);transition:filter .2s}
+@media (hover:hover){.cta:hover{filter:brightness(1.07)}}
+.cta-note{margin:8px 0 0;text-align:center;font-size:11.5px;color:var(--text-3)}
+
+/* region */
+.r-h{margin:0;padding-right:44px;font:700 16px/1.4 var(--serif);display:flex;align-items:center;gap:8px}
+.r-h .ic{color:var(--gold)}
+.hint{margin:0;font-size:12px;color:var(--text-3);line-height:1.6}
+.hint code{background:var(--paper);border:1px solid var(--line);padding:0 5px;border-radius:4px;font-size:12px;color:var(--gold);word-break:break-all}
+.rgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.rgrid button{padding:10px 4px;text-align:center;font-size:12.5px;background:var(--espresso);border:1px solid var(--line);border-radius:8px;color:var(--text-2);transition:border-color .2s,color .2s}
+@media (hover:hover){.rgrid button:hover{border-color:var(--gold);color:var(--gold)}}
+
+/* pin */
+.pin{max-width:340px;border-radius:16px;text-align:center}
+.pin .ico{width:48px;height:48px;margin:0 auto 12px;border-radius:50%;background:var(--elevated);border:1px solid var(--gold-line);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px}
+.pin h3{margin:0;font:700 16px/1.4 var(--serif)}
+.pin p{margin:4px 0 14px;font-size:12.5px;color:var(--text-3)}
+.pin input{width:100%;text-align:center;background:var(--espresso);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:20px;letter-spacing:.3em;color:var(--gold)}
+.pin input:focus{outline:none;border-color:var(--gold)}
+.pin .err{color:var(--terra);font-size:12.5px;margin:8px 0 0}
+.row{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;min-height:44px;padding:10px;border-radius:12px;font-size:13.5px;font-weight:500;text-align:center;border:1px solid var(--line);background:var(--espresso);color:var(--text-2)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--espresso);font-weight:700}
+.btn.sm{flex:none;min-height:40px;padding:8px 14px;border-radius:8px}
+
+/* dev console */
+.dev-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.dev-h h3{margin:0;font:700 16px/1.4 var(--serif);color:var(--gold);display:flex;align-items:center;gap:8px}
+.dev-h p{margin:2px 0 0;font-size:12px;color:var(--text-3)}
+.dev-h .x{position:static;flex:none}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs button{flex:1;padding:10px 4px;text-align:center;font-size:13px;color:var(--text-3);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:500}
+.form{display:flex;flex-direction:column;gap:12px}
+.fld label,.lbl{display:block;font-size:12.5px;font-weight:500;color:var(--text-2);margin-bottom:4px}
+.in{width:100%;background:var(--espresso);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:16px;color:var(--text)}
+.in:focus{outline:none;border-color:var(--gold)}
+textarea.in{resize:vertical;min-height:84px;line-height:1.55}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:380px){.g3{grid-template-columns:1fr 1fr}}
+.box{background:var(--espresso);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.box.terra .lbl{color:var(--terra)}
+.box .lbl{margin:0}
+.box .in{background:var(--paper)}
+.srow{display:flex;gap:8px}
+.srow .in{flex:1;min-width:0}
+.tres{display:flex;flex-direction:column;gap:6px;max-height:210px;overflow-y:auto}
+.tres button{display:flex;align-items:center;gap:10px;padding:6px;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+.tres .th{width:32px;height:48px;border-radius:4px;overflow:hidden;background:var(--elevated);flex:none}
+.tres .th img{width:100%;height:100%;object-fit:cover;display:block}
+.tres .tt{flex:1;min-width:0;font-size:13px}
+.tres .tt b{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tres .tt small{color:var(--text-3);font-size:11.5px}
+.pup{display:flex;gap:12px;align-items:center}
+.pthumb{width:48px;height:72px;border-radius:6px;overflow:hidden;background:var(--elevated);border:1px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;color:var(--text-3)}
+.pthumb img{width:100%;height:100%;object-fit:cover}
+.pup .in{flex:1;min-width:0}
+.mini{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;font-size:12.5px;border:1px solid var(--gold-line);color:var(--gold);border-radius:8px;background:var(--paper)}
+.mini.plain{border-color:var(--line);color:var(--text-3)}
+.editing{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:8px;padding:8px 10px;font-size:12.5px;color:var(--gold);margin-bottom:12px}
+.mlist{display:flex;flex-direction:column;gap:8px;max-height:48vh;overflow-y:auto}
+.mrow{display:flex;align-items:center;gap:6px;padding:8px 8px 8px 12px;background:var(--espresso);border:1px solid var(--line);border-radius:8px}
+.mrow .t{flex:1;min-width:0;font-size:13px}
+.mrow .t b{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .t small{color:var(--text-3);font-size:11.5px}
+.ib{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--text-3);flex:none;font-size:15px}
+.ib.del{color:var(--terra)}
+.ib.armed{background:var(--terra);color:#fff;width:auto;padding:0 10px;font-size:12px}
+.mtop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:12.5px;color:var(--text-2);flex-wrap:wrap}
+.mtop .acts{display:flex;gap:6px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 4px}
+.stat small{display:block;font-size:11px;color:var(--text-3)}
+.stat b{font-size:18px;font-variant-numeric:tabular-nums}
+.pane-links{display:flex;flex-direction:column;gap:14px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:95;max-width:min(92vw,420px);background:var(--elevated);border:1px solid var(--gold-line);color:var(--text);padding:10px 16px;border-radius:10px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.5);text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M7 4h10v16l-5-3.5L7 20z"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="1.5"/><path d="m3 8 2.5-4.5 4 1.2L7 9M9.5 4.7l4 1.2L11 10M13.5 5.9l4 1.2L15 11"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M12 9v11M3 9h18M12 9C9.5 9 8 8 8 6.5S9.5 4 12 9zM12 9c2.5 0 4-1 4-2.5S14.5 4 12 9z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+<symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19zM14 7l3 3"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.7-8 9-4.8-1.3-8-4.5-8-9V6z"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m4 18 5-5 4 4 3-3 4 4"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-cross" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol>
+</defs></svg>
+
+<div class="grain"></div>
+
+<div class="app">
+  <header class="top"><div class="gutter">
+    <div class="brand-row">
+      <div class="brand">
+        <h1>문턱너머<span class="tag">Art Cinema</span></h1>
+        <p>단 한 번의 만남으로, 예술영화의 벽을 허물다</p>
+      </div>
+      <button id="locBtn" class="loc" type="button" onclick="openModal('regionModal')" aria-label="상영 지역 설정">
+        <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><span id="locText">지역 선택</span><svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg>
+      </button>
+    </div>
+    <div class="search">
+      <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
+      <input id="searchInput" type="text" inputmode="search" autocomplete="off" placeholder="영화 제목, 감독, 키워드로 검색" aria-label="영화 검색">
+      <button id="clearSearch" type="button" hidden aria-label="검색어 지우기"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="moods" id="moodFilters"></div>
+  </div></header>
+
+  <div class="bar gutter">
+    <div class="bar-l"><span class="bar-mark"></span><h2 id="sectionTitle">최근 개봉작</h2><span class="count" id="count">0</span></div>
+    <div class="seg">
+      <button id="tabRecent" class="on" type="button" onclick="setCategory('recent')">최근</button>
+      <button id="tabPast" type="button" onclick="setCategory('past')">명작</button>
+    </div>
+  </div>
+
+  <main class="feed gutter">
+    <div id="grid" class="grid"><p class="loading">영화를 불러오는 중…</p></div>
+    <div id="empty" class="empty" hidden>
+      <svg class="ic" aria-hidden="true"><use href="#i-film"/></svg>
+      <p>조건에 맞는 영화가 없습니다.</p>
+      <small>다른 키워드나 분위기 태그를 골라보세요.</small><br>
+      <button class="btn-line" type="button" onclick="resetFilters()">전체 보기</button>
+    </div>
+  </main>
+
+  <section class="pager gutter">
+    <button class="pbtn" type="button" onclick="pageMore('recent')"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg><span id="moreRecentText">최근영화 더보기</span></button>
+    <button class="pbtn gold" type="button" onclick="pageMore('past')"><svg class="ic" aria-hidden="true"><use href="#i-bookmark"/></svg><span id="morePastText">과거 영화 더보기</span></button>
+  </section>
+
+  <footer class="foot gutter">
+    <div class="rule"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
+    <p class="name">문턱너머 · 독립 &amp; 예술영화 원스톱 네비게이터</p>
+    <p class="copy">© Over the Sill Art House Cinema Curation</p>
+    <button class="dev-link" type="button" onclick="openPin()"><svg class="ic" aria-hidden="true"><use href="#i-gear"/></svg>개발자버튼</button>
+  </footer>
+</div>
+
+<!-- 영화 상세 -->
+<div id="detailModal" class="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="영화 상세">
+    <button class="x" type="button" aria-label="닫기" onclick="closeModal('detailModal')"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- 지역 선택 -->
+<div id="regionModal" class="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="상영 지역 설정">
+    <button class="x" type="button" aria-label="닫기" onclick="closeModal('regionModal')"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h3 class="r-h"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>상영 지역 설정</h3>
+    <p class="hint" style="margin:6px 0 14px">내 위치 또는 원하는 지역을 고르세요. 상영시간표는 네이버 검색 결과에서 지역과 극장을 골라 확인할 수 있습니다.</p>
+    <button class="btn-line wide" type="button" onclick="requestGPS()"><svg class="ic" aria-hidden="true"><use href="#i-cross"/></svg>현재 위치로 자동 설정</button>
+    <div id="regionGrid" class="rgrid"></div>
+  </div>
+</div>
+
+<!-- PIN -->
+<div id="pinModal" class="modal" hidden style="align-items:center;padding:16px">
+  <div class="sheet pin" role="dialog" aria-modal="true" aria-label="개발자 인증" style="border-radius:16px">
+    <div class="ico"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></div>
+    <h3>개발자 인증</h3>
+    <p>PIN 번호를 입력하세요.</p>
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="off" aria-label="PIN 번호">
+    <p id="pinErr" class="err" hidden>PIN이 올바르지 않습니다.</p>
+    <div class="row">
+      <button class="btn" type="button" onclick="closeModal('pinModal')">취소</button>
+      <button class="btn gold" type="button" onclick="verifyPin()">인증</button>
+    </div>
+  </div>
+</div>
+
+<!-- 개발자 콘솔 -->
+<div id="devModal" class="modal" hidden style="align-items:center;padding:12px">
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="개발자 콘솔" style="border-radius:16px">
+    <div class="dev-h">
+      <div>
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-sliders"/></svg>개발자 콘솔</h3>
+        <p>저장하면 1~2분 안에 모든 방문자 화면에 반영됩니다.</p>
+      </div>
+      <button class="x" type="button" aria-label="닫기" onclick="closeModal('devModal')"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="tabs">
+      <button id="tabAdd" class="on" type="button" onclick="devTab('add')">영화 추가</button>
+      <button id="tabManage" type="button" onclick="devTab('manage')">영화 관리</button>
+      <button id="tabLinks" type="button" onclick="devTab('links')">설정·지표</button>
+    </div>
+
+    <div id="paneAdd">
+      <div class="box" style="margin-bottom:12px">
+        <span class="lbl">TMDB 자동 채우기</span>
+        <div class="srow">
+          <input id="tmdbQ" class="in" type="text" placeholder="영화 제목 (예: 존 오브 인터레스트)" aria-label="TMDB 검색어">
+          <button class="btn gold sm" type="button" onclick="searchTmdb()">검색</button>
+        </div>
+        <div id="tmdbRes" class="tres" hidden></div>
+      </div>
+      <div id="editBanner" class="editing" hidden><span id="editBannerText"></span><button class="mini plain" type="button" onclick="cancelEdit()">취소</button></div>
+      <form id="movieForm" class="form" onsubmit="submitMovie(event)" autocomplete="off">
+        <div class="fld"><label for="fCategory">카테고리</label>
+          <select id="fCategory" class="in"><option value="recent">최근 개봉작</option><option value="past">과거 예술영화 (명작)</option></select></div>
+        <div class="fld"><label for="fTitle">영화 제목 *</label><input id="fTitle" class="in" type="text" required placeholder="제목 입력"></div>
+        <div class="g3">
+          <div class="fld"><label for="fYear">개봉연도</label><input id="fYear" class="in" type="text" inputmode="numeric" placeholder="2024"></div>
+          <div class="fld"><label for="fDirector">감독</label><input id="fDirector" class="in" type="text" placeholder="감독명"></div>
+          <div class="fld"><label for="fRuntime">러닝타임</label><input id="fRuntime" class="in" type="text" placeholder="105분"></div>
+        </div>
+        <div class="fld">
+          <label for="fPoster">포스터 이미지 주소</label>
+          <div class="pup">
+            <div class="pthumb" id="fThumb"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg></div>
+            <input id="fPoster" class="in" type="text" inputmode="url" placeholder="https://..." oninput="previewPoster()">
+          </div>
+        </div>
+        <div class="fld"><label for="fQuote">큐레이터 한줄평</label><input id="fQuote" class="in" type="text" placeholder="영화가 남긴 아름다운 잔상..."></div>
+        <div class="fld"><label for="fTags">분위기 해시태그 (쉼표로 구분)</label><input id="fTags" class="in" type="text" placeholder="잔잔한여운, 깊은울림"></div>
+        <div class="fld"><label for="fSynopsis">시놉시스 / 줄거리</label><textarea id="fSynopsis" class="in" rows="3" placeholder="영화 줄거리 입력..."></textarea></div>
+        <div class="box terra">
+          <span class="lbl">한정판 굿즈 정보 (선택)</span>
+          <div class="g2">
+            <input id="fGoodsName" class="in" type="text" placeholder="굿즈명" aria-label="굿즈명">
+            <input id="fGoodsTheater" class="in" type="text" placeholder="증정 극장" aria-label="증정 극장">
+          </div>
+          <input id="fGoodsStatus" class="in" type="text" placeholder="수량 상태 (예: 소량 남음)" aria-label="수량 상태">
+        </div>
+        <button id="fSubmit" class="btn gold" type="submit">새 영화 등록하기</button>
+      </form>
+    </div>
+
+    <div id="paneManage" hidden>
+      <div class="mtop"><span>등록된 영화 <b id="mCount">0</b>편</span>
+        <div class="acts">
+          <button class="mini" type="button" onclick="fillMissing()"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg>TMDB로 빈 정보 채우기</button>
+          <button id="resetBtn" class="mini plain" type="button" onclick="resetDefaults()"><svg class="ic" aria-hidden="true"><use href="#i-undo"/></svg><span id="resetText">초기 데이터 복원</span></button>
+        </div></div>
+      <div id="mList" class="mlist"></div>
+    </div>
+
+    <div id="paneLinks" class="pane-links" hidden>
+      <div class="box">
+        <span class="lbl">저장 연결 (GitHub)</span>
+        <div class="fld"><label for="cRepo">저장소 (아이디/저장소이름)</label><input id="cRepo" class="in" type="text" placeholder="myname/munteok-neomeo" autocapitalize="off" autocorrect="off"></div>
+        <div class="g2">
+          <div class="fld"><label for="cBranch">브랜치</label><input id="cBranch" class="in" type="text" placeholder="main" autocapitalize="off"></div>
+          <div class="fld"><label for="cToken">접근 토큰</label><input id="cToken" class="in" type="password" placeholder="github_pat_..." autocomplete="off"></div>
+        </div>
+        <div class="fld"><label for="cTmdb">TMDB API 키</label><input id="cTmdb" class="in" type="password" placeholder="TMDB API 키" autocomplete="off"></div>
+        <p class="hint">토큰과 키는 지금 쓰는 이 브라우저에만 저장되고, 사이트 코드에는 들어가지 않습니다.</p>
+        <div class="row" style="margin-top:4px">
+          <button class="btn sm" type="button" onclick="testConn()">연결 확인</button>
+          <button class="btn gold sm" type="button" onclick="saveCfg()" style="flex:1">설정 저장</button>
+        </div>
+      </div>
+      <div class="box">
+        <span class="lbl">이 기기에서의 기록</span>
+        <div class="stats">
+          <div class="stat"><small>방문</small><b id="sVisits">0</b></div>
+          <div class="stat"><small>링크 유입</small><b id="sHash">0</b></div>
+          <div class="stat"><small>상영표 클릭</small><b id="sClicks">0</b></div>
+        </div>
+        <p class="hint">상영표 클릭률 <b id="sCtr" style="color:var(--gold)">0%</b>. 이 숫자는 지금 쓰는 기기에서만 집계됩니다. 방문자 전체 통계는 인스타그램 인사이트에서 확인하세요.</p>
+      </div>
+      <div class="box">
+        <span class="lbl">인스타그램용 링크</span>
+        <p class="hint">프로필·릴스에는 아래 링크를, 영화 하나로 바로 연결하려면 영화 관리 탭의 복사 버튼으로 만든 링크를 쓰세요.</p>
+        <button class="mini" type="button" onclick="copyText(baseUrl() + '?utm_source=instagram')" style="align-self:flex-start"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg>인스타 프로필 링크 복사</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+'use strict';
+/* ---- 기본 데이터 (movies.json을 불러오지 못할 때만 사용) ---- */
+const DEFAULT_MOVIES = [
+  {id:'r1',title:'존 오브 인터레스트',category:'recent',year:'2024',director:'조나단 글레이저',runtime:'105분',poster:'',quote:'평온한 담장 너머의 참혹함을 포착한 서늘하고도 정교한 연출.',hashtags:['깊은울림','섬세한시선'],synopsis:'아우슈비츠 수용소 지휘관 루돌프 회스와 그의 아내 헤트비히, 아이들은 수용소 담장 바로 옆 꽃이 만발한 정원이 딸린 집에서 평화로운 나날을 보낸다.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'r2',title:'퍼펙트 데이즈',category:'recent',year:'2024',director:'빔 벤더스',runtime:'124분',poster:'',quote:'반복되는 일상 속에서 발견하는 빛나는 순간과 깊은 평온.',hashtags:['담백한위로','잔잔한여운'],synopsis:'도쿄 공공화장실 청소부 히라야마는 매일 아침 카세트테이프로 올드 팝을 듣고, 필름 카메라로 나무 사이로 스며드는 햇살을 찍으며 평범하지만 충만한 하루를 살아간다.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'r3',title:'악은 존재하지 않는다',category:'recent',year:'2024',director:'하마구치 류스케',runtime:'106분',poster:'',quote:'자연과 인간, 선과 악의 경계선에서 느껴지는 묵직한 서스펜스.',hashtags:['깊은울림','섬세한시선'],synopsis:'도쿄와 가까운 조용한 시골 마을. 개발업자들이 글램핑장을 짓기 위해 찾아오면서 평화롭던 자연과 주민들의 삶에 균열이 시작된다.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'r4',title:'패스트 라이브즈',category:'recent',year:'2024',director:'셀린 송',runtime:'105분',poster:'',quote:'우리가 스쳐 지나간 인연과 선택하지 않은 삶에 대한 아련한 고백.',hashtags:['잔잔한여운','담백한위로'],synopsis:'12살 어린 시절 서울에서 만난 나영과 해성. 24년의 시간이 지나 뉴욕에서 다시 마주한 두 사람의 운명적 사흘.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'r5',title:'추락의 해부',category:'recent',year:'2024',director:'쥐스틴 트리에',runtime:'151분',poster:'',quote:'관계의 진실을 집요하게 파헤치는 강렬한 시선.',hashtags:['섬세한시선','깊은울림'],synopsis:'외딴 샬레에서 남편이 추락사한다. 유일한 목격자는 시각장애를 가진 아들. 아내 산드라는 남편 살해 혐의로 법정에 서게 된다.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'r6',title:'괴물',category:'recent',year:'2023',director:'고레에다 히로카즈',runtime:'126분',poster:'',quote:'누가 괴물인가. 진실의 다면성을 감동적으로 조명한 거장의 신작.',hashtags:['깊은울림','담백한위로'],synopsis:'싱글맘 사오리는 아들 미나토의 행동 이상을 느끼고 학교로 찾아간다. 세 개의 시선으로 풀어내는 한 아이와 두 소년의 비밀.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'r7',title:'드라이브 마이 카',category:'recent',year:'2021',director:'하마구치 류스케',runtime:'179분',poster:'',quote:'상처를 품고 달리는 빨간 사브 안에서 나누는 조용한 치유.',hashtags:['잔잔한여운','담백한위로'],synopsis:'아내의 갑작스러운 죽음 이후 상실감에 빠진 연극 연출가 가후쿠. 운전기사 미사키와의 드라이브를 통해 아픔을 직면한다.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'r8',title:'에브리씽 에브리웨어 올 앳 원스',category:'recent',year:'2022',director:'다니엘 콴, 다니엘 샤이너트',runtime:'139분',poster:'',quote:'다중우주 속에서 다정한 사랑을 포옹하는 상상력의 절정.',hashtags:['담백한위로','깊은울림'],synopsis:'미국에 이민 와 세탁소를 운영하던 에블린이 어느 날 다중우주를 넘나들며 세상을 구하고 딸과의 관계를 돌아보게 된다.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'p1',title:'윤희에게',category:'past',year:'2019',director:'임대형',runtime:'105분',poster:'',quote:'눈 덮인 오타루에서 도착한 편지, 잊혀진 마음의 온기.',hashtags:['잔잔한여운','담백한위로'],synopsis:'우연히 엄마 윤희에게 온 편지를 읽은 딸 새봄이 편지의 발신인이 있는 오타루로 여행을 제안하며 벌어지는 아련하고 따뜻한 여정.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'p2',title:'벌새',category:'past',year:'2019',director:'김보라',runtime:'138분',poster:'',quote:'1994년, 세상이 무너지던 해 나에게 다가온 따뜻한 영지 선생님.',hashtags:['깊은울림','섬세한시선'],synopsis:'성수대교가 무너졌던 1994년, 알 수 없는 거대한 세상 속에서 자신의 날갯짓을 찾아가는 14살 은희의 보편적이고 찬란한 이야기.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'p3',title:'타오르는 여인의 초상',category:'past',year:'2020',director:'셀린 시아마',runtime:'122분',poster:'',quote:'후회하지 말고 기억해. 서로를 바라보았던 찬란한 응시의 시선.',hashtags:['섬세한시선','깊은울림'],synopsis:'원치 않는 결혼을 앞둔 귀족 여성 엘로이즈와 그녀의 초상화를 비밀리에 그려야 하는 화가 마리안느의 뜨거운 사랑.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'p4',title:'소공녀',category:'past',year:'2018',director:'전고운',runtime:'106분',poster:'',quote:'집은 없어도 취향은 명확한 미소의 위풍당당 도시 유랑기.',hashtags:['담백한위로','잔잔한여운'],synopsis:'위스키, 담배, 사랑하는 남자친구만 있다면 바랄 게 없는 가사도우미 미소. 집세가 오르자 집을 포기하고 친구들의 집을 찾아 떠난다.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'p5',title:'화양연화',category:'past',year:'2000',director:'왕가위',runtime:'99분',poster:'',quote:'가장 아름답고 찬란했던 시절, 차마 입 밖으로 내지 못한 비밀.',hashtags:['잔잔한여운','섬세한시선'],synopsis:'같은 날 같은 아파트로 이사 온 첸 부인과 차우. 각자의 배우자가 외도를 하고 있다는 비밀을 공유하며 둘 사이에 서서히 피어나는 감정.',goodsName:'',goodsTheater:'',goodsStatus:''},
+  {id:'p6',title:'플로리다 프로젝트',category:'past',year:'2018',director:'션 베이커',runtime:'111분',poster:'',quote:'파스텔톤 매직 캐슬 너머의 현실, 그 속에서 피어나는 무지갯빛 아이들.',hashtags:['깊은울림','담백한위로'],synopsis:'디즈니월드 건너편 모텔 \'매직 캐슬\'에 사는 6살 장난꾸러기 무니와 친구들의 찬란하고 아련한 여름방학.',goodsName:'',goodsTheater:'',goodsStatus:''}
+];
+const MOOD_BASE = ['잔잔한여운','담백한위로','깊은울림','섬세한시선'];
+const REGIONS = ['서울 전체','서울 마포/신촌','서울 종로/혜화','서울 강남/압구정','부산 해운대','부산 서면/중구','인천/경기','대구/경북','광주/전라','대전/충청','강원도','제주특별자치도'];
+const ART = [['#3A2A1F','#14100D'],['#2B3A3A','#0F1514'],['#3B2430','#140E11'],['#33301E','#12110A'],['#232C3D','#0E1117'],['#3A2420','#140D0C']];
+const PIN = '9754';
+const TMDB = 'https://api.themoviedb.org/3';
+const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
+
+/* ---- 상태 ---- */
+let movies = [];
+let category = 'recent', mood = '#전체', query = '';
+const limits = {recent:6, past:6};
+let editingId = null, armedId = null, armedTimer = null, resetArmed = false, saving = false, devUnlocked = false, toastTimer = null, lastTmdb = [];
+let stats = {visits:0, hash:0, clicks:0};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const ic = (n, c) => '<svg class="ic' + (c ? ' ' + c : '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>';
+const clone = o => JSON.parse(JSON.stringify(o));
+const hashStr = s => { let h = 0; for (const ch of String(s)) h = (h * 31 + ch.codePointAt(0)) >>> 0; return h; };
+const LS = {
+  get(k){ try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set(k, v){ try { localStorage.setItem(k, v); } catch(e) {} }
+};
+const baseUrl = () => location.origin + location.pathname;
+
+/* ---- 설정 (이 브라우저에만 저장) ---- */
+function guessRepo(){
+  if (location.hostname.slice(-10) !== '.github.io') return '';
+  const owner = location.hostname.split('.')[0];
+  const first = location.pathname.split('/')[1];
+  return owner + '/' + (first || owner + '.github.io');
+}
+function getCfg(){
+  let c = {};
+  try { c = JSON.parse(LS.get('sill_cfg') || '{}') || {}; } catch(e) {}
+  if (!c.repo) c.repo = guessRepo();
+  c.branch = c.branch || 'main';
+  return c;
+}
+const tmdbKey = () => (LS.get('sill_tmdb') || '').trim();
+const ghHeaders = cfg => ({'Authorization':'Bearer ' + cfg.token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28'});
+const ghUrl = cfg => 'https://api.github.com/repos/' + cfg.repo + '/contents/movies.json';
+const b64 = str => btoa(unescape(encodeURIComponent(str)));
+
+/* ---- 데이터 불러오기 ---- */
+async function loadMovies(){
+  const cfg = getCfg();
+  if (cfg.token && cfg.repo) {
+    try {
+      const r = await fetch(ghUrl(cfg) + '?ref=' + encodeURIComponent(cfg.branch), {headers:Object.assign(ghHeaders(cfg), {'Accept':'application/vnd.github.raw+json'}), cache:'no-store'});
+      if (r.ok) { const d = JSON.parse(await r.text()); if (Array.isArray(d.movies)) { movies = d.movies; return; } }
+    } catch(e) {}
+  }
+  try {
+    const r = await fetch('movies.json?t=' + Date.now(), {cache:'no-store'});
+    if (!r.ok) throw 0;
+    const d = await r.json();
+    if (!Array.isArray(d.movies)) throw 0;
+    movies = d.movies; return;
+  } catch(e) {}
+  movies = clone(DEFAULT_MOVIES);
+}
+
+/* ---- 저장 (GitHub 저장소의 movies.json을 갱신) ---- */
+async function ghWrite(cfg, text){
+  for (let i = 0; i < 2; i++) {
+    let sha;
+    const g = await fetch(ghUrl(cfg) + '?ref=' + encodeURIComponent(cfg.branch), {headers:ghHeaders(cfg), cache:'no-store'});
+    if (g.status === 200) sha = (await g.json()).sha;
+    else if (g.status !== 404) throw {status:g.status};
+    const body = {message:'문턱너머 콘솔에서 영화 목록 갱신', content:b64(text), branch:cfg.branch};
+    if (sha) body.sha = sha;
+    const p = await fetch(ghUrl(cfg), {method:'PUT', headers:Object.assign({'Content-Type':'application/json'}, ghHeaders(cfg)), body:JSON.stringify(body)});
+    if (p.ok) return;
+    if (p.status === 409 || p.status === 422) continue;
+    throw {status:p.status};
+  }
+  throw {status:409};
+}
+function ghErr(e){
+  const s = e && e.status;
+  if (s === 401) return '토큰이 올바르지 않거나 만료되었습니다. 설정 탭에서 확인해주세요.';
+  if (s === 403) return '이 토큰에는 저장 권한이 없습니다. 저장소의 Contents 읽기·쓰기 권한을 확인해주세요.';
+  if (s === 404) return '저장소나 브랜치를 찾지 못했습니다. 저장소 이름과 토큰의 접근 범위를 확인해주세요.';
+  if (s === 409 || s === 422) return '다른 곳에서 먼저 저장되었습니다. 새로 고친 뒤 다시 시도해주세요.';
+  return '저장하지 못했습니다. 인터넷 연결을 확인하고 다시 시도해주세요.';
+}
+async function saveMovies(next, okMsg){
+  if (saving) return false;
+  const cfg = getCfg();
+  if (!cfg.repo || !cfg.token) { toast('설정·지표 탭에서 저장소와 토큰을 먼저 입력해주세요.'); devTab('links'); return false; }
+  saving = true;
+  const prev = movies;
+  movies = next; renderAll(); renderManage();
+  toast('저장 중…', true);
+  try {
+    await ghWrite(cfg, JSON.stringify({updatedAt:new Date().toISOString(), movies:movies}, null, 2));
+    toast((okMsg || '저장했습니다.') + ' 방문자 화면에는 1~2분 안에 반영됩니다.');
+    return true;
+  } catch(e) {
+    movies = prev; renderAll(); renderManage(); toast(ghErr(e));
+    return false;
+  } finally { saving = false; }
+}
+
+/* ---- TMDB ---- */
+async function tmdb(path, params){
+  const key = tmdbKey();
+  if (!key) throw {nokey:true};
+  const u = new URL(TMDB + path);
+  u.searchParams.set('api_key', key);
+  u.searchParams.set('language', 'ko-KR');
+  Object.keys(params || {}).forEach(k => u.searchParams.set(k, params[k]));
+  const r = await fetch(u);
+  if (!r.ok) throw {status:r.status};
+  return r.json();
+}
+function tmdbErr(e){
+  if (e && e.nokey) return '설정·지표 탭에 TMDB API 키를 먼저 입력해주세요.';
+  if (e && e.status === 401) return 'TMDB API 키가 올바르지 않습니다.';
+  return 'TMDB에 연결하지 못했습니다. 잠시 후 다시 시도해주세요.';
+}
+async function searchTmdb(){
+  const q = $('tmdbQ').value.trim();
+  if (!q) return;
+  const box = $('tmdbRes');
+  box.hidden = false; box.innerHTML = '<p class="hint" style="padding:6px">검색 중…</p>';
+  try {
+    const d = await tmdb('/search/movie', {query:q});
+    lastTmdb = (d.results || []).slice(0, 5);
+    box.innerHTML = lastTmdb.length ? lastTmdb.map((m, i) =>
+      '<button type="button" data-act="tpick" data-idx="' + i + '"><span class="th">' + (m.poster_path ? '<img src="' + TMDB_IMG + esc(m.poster_path) + '" alt="">' : '') + '</span>' +
+      '<span class="tt"><b>' + esc(m.title) + '</b><small>' + esc((m.release_date || '').slice(0, 4) || '연도 미상') + ' · ' + esc(m.original_title || '') + '</small></span></button>'
+    ).join('') : '<p class="hint" style="padding:6px">검색 결과가 없습니다.</p>';
+  } catch(e) { box.innerHTML = '<p class="hint" style="padding:6px;color:var(--terra)">' + esc(tmdbErr(e)) + '</p>'; }
+}
+function directorsOf(d){
+  const crew = (d.credits && d.credits.crew) || [];
+  return crew.filter(c => c.job === 'Director').map(c => c.name).join(', ');
+}
+async function pickTmdb(idx){
+  const m = lastTmdb[idx]; if (!m) return;
+  toast('정보를 가져오는 중…', true);
+  try {
+    const d = await tmdb('/movie/' + m.id, {append_to_response:'credits'});
+    $('fTitle').value = d.title || m.title || '';
+    if (d.release_date) $('fYear').value = d.release_date.slice(0, 4);
+    $('fDirector').value = directorsOf(d);
+    if (d.runtime) $('fRuntime').value = d.runtime + '분';
+    $('fPoster').value = d.poster_path ? TMDB_IMG + d.poster_path : ''; previewPoster();
+    if (d.overview) $('fSynopsis').value = d.overview;
+    $('tmdbRes').hidden = true;
+    toast('채웠습니다. 한줄평과 해시태그를 입력하고 등록하세요.');
+  } catch(e) { toast(tmdbErr(e)); }
+}
+async function fillMissing(){
+  if (!tmdbKey()) { toast(tmdbErr({nokey:true})); devTab('links'); return; }
+  const next = clone(movies), skipped = [];
+  let changed = 0;
+  toast('TMDB에서 빈 정보를 찾는 중…', true);
+  for (const m of next) {
+    if (m.poster && m.director && m.runtime) continue;
+    try {
+      const s = await tmdb('/search/movie', {query:m.title});
+      const y = parseInt(m.year, 10) || 0;
+      const hit = (s.results || []).find(r => { const ry = parseInt((r.release_date || '').slice(0, 4), 10) || 0; return !y || (ry && Math.abs(ry - y) <= 1); });
+      if (!hit) { skipped.push(m.title); continue; }
+      const d = await tmdb('/movie/' + hit.id, {append_to_response:'credits'});
+      let did = false;
+      if (!m.poster && d.poster_path) { m.poster = TMDB_IMG + d.poster_path; did = true; }
+      if (!m.director && directorsOf(d)) { m.director = directorsOf(d); did = true; }
+      if (!m.runtime && d.runtime) { m.runtime = d.runtime + '분'; did = true; }
+      if (did) changed++;
+    } catch(e) {
+      if (e && (e.nokey || e.status === 401)) { toast(tmdbErr(e)); return; }
+      skipped.push(m.title);
+    }
+  }
+  if (!changed) { toast('채울 수 있는 정보를 찾지 못했습니다.' + (skipped.length ? ' 확인 필요: ' + skipped.join(', ') : '')); return; }
+  await saveMovies(next, changed + '편의 정보를 채웠습니다.' + (skipped.length ? ' 확인 필요: ' + skipped.join(', ') + '.' : ''));
+}
+
+/* ---- 통계 (이 기기 기준) ---- */
+function initStats(){
+  try { const s = JSON.parse(LS.get('sill_stats_v3') || 'null'); if (s) stats = Object.assign(stats, s); } catch(e) {}
+  stats.visits += 1;
+  const h = (location.hash || '').slice(1);
+  if (new URLSearchParams(location.search).get('utm_source') === 'instagram' || h.indexOf('film-') === 0) stats.hash += 1;
+  saveStats();
+}
+function saveStats(){ LS.set('sill_stats_v3', JSON.stringify(stats)); }
+function renderStats(){
+  $('sVisits').textContent = stats.visits; $('sHash').textContent = stats.hash; $('sClicks').textContent = stats.clicks;
+  $('sCtr').textContent = (stats.visits ? (stats.clicks / stats.visits * 100).toFixed(1) : '0') + '%';
+}
+
+/* ---- 토스트 ---- */
+function toast(msg, sticky){
+  const t = $('toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, sticky ? 12000 : Math.max(3400, msg.length * 90));
+}
+
+/* ---- 목록 렌더 ---- */
+function moodList(){
+  const extra = [];
+  movies.forEach(m => (m.hashtags || []).forEach(t => { if (MOOD_BASE.indexOf(t) < 0 && extra.indexOf(t) < 0) extra.push(t); }));
+  const list = ['#전체'].concat(MOOD_BASE.map(t => '#' + t), extra.map(t => '#' + t));
+  if (movies.some(m => (m.goodsName || '').trim())) list.push('#굿즈증정');
+  return list;
+}
+function renderMoods(){
+  const list = moodList();
+  if (list.indexOf(mood) < 0) mood = '#전체';
+  $('moodFilters').innerHTML = list.map(t => '<button type="button" class="chip' + (t === mood ? ' on' : '') + '" data-mood="' + esc(t) + '">' + esc(t) + '</button>').join('');
+}
+function filtered(cat){
+  let list = movies.filter(m => m.category === cat);
+  if (mood === '#굿즈증정') list = list.filter(m => (m.goodsName || '').trim());
+  else if (mood !== '#전체') { const t = mood.slice(1); list = list.filter(m => (m.hashtags || []).indexOf(t) > -1); }
+  if (query) list = list.filter(m => [m.title, m.director, m.quote, (m.hashtags || []).join(' ')].join(' ').toLowerCase().indexOf(query) > -1);
+  return list;
+}
+function artHtml(m, lg){
+  const p = ART[hashStr(m.title) % ART.length];
+  return '<div class="art' + (lg ? ' lg' : '') + '" style="--a:' + p[0] + ';--b:' + p[1] + '"><span class="art-y">' + esc(m.year || '') + '</span><span class="art-t">' + esc(m.title) + '</span><span class="art-d">' + esc(m.director || '') + '</span></div>';
+}
+function posterHtml(m, lg){
+  const p = (m.poster || '').trim();
+  if (/^https:\/\//.test(p) || /^[\w\-./]+\.(jpe?g|png|webp)$/i.test(p))
+    return '<img src="' + esc(p) + '" alt="' + esc(m.title) + ' 포스터" loading="lazy" referrerpolicy="no-referrer" data-fb="' + esc(m.id) + '" data-lg="' + (lg ? 1 : 0) + '">';
+  return artHtml(m, lg);
+}
+function cardHtml(m){
+  const meta = [m.year, m.runtime, m.director ? '감독 ' + m.director : ''].filter(Boolean).join(' · ');
+  const q = (m.quote || '').trim() ? '<p class="quote">“' + esc(m.quote) + '”</p>' : '';
+  const tags = (m.hashtags || []).length ? '<div class="tags">' + m.hashtags.map(t => '<span>#' + esc(t) + '</span>').join('') + '</div>' : '';
+  const g = (m.goodsName || '').trim() ? '<div class="goods">' + ic('gift') + '<b>' + esc(m.goodsName) + '</b>' + (m.goodsStatus ? '<i>' + esc(m.goodsStatus) + '</i>' : '') + '</div>' : '';
+  return '<article class="card" role="button" tabindex="0" data-id="' + esc(m.id) + '"><div class="poster">' + posterHtml(m, false) + '</div><div class="info"><div><div class="meta">' + esc(meta) + '</div><h3>' + esc(m.title) + '</h3>' + q + tags + '</div>' + g + '</div></article>';
+}
+function renderFeed(){
+  const list = filtered(category);
+  $('count').textContent = list.length;
+  if (!list.length) { $('grid').innerHTML = ''; $('empty').hidden = false; }
+  else { $('empty').hidden = true; $('grid').innerHTML = list.slice(0, limits[category]).map(cardHtml).join(''); }
+  const r = filtered('recent').length, p = filtered('past').length;
+  $('moreRecentText').textContent = (r <= limits.recent && limits.recent > 6) ? '최근영화 접기' : '최근영화 더보기';
+  $('morePastText').textContent = (p <= limits.past && limits.past > 6) ? '과거영화 접기' : '과거 영화 더보기';
+}
+function renderAll(){ renderMoods(); renderFeed(); }
+function setCategory(cat){
+  category = cat;
+  $('tabRecent').className = cat === 'recent' ? 'on' : '';
+  $('tabPast').className = cat === 'past' ? 'on' : '';
+  $('sectionTitle').textContent = cat === 'recent' ? '최근 개봉작' : '과거 예술영화 명작';
+  renderFeed();
+}
+function pageMore(cat){
+  if (category !== cat) { setCategory(cat); return; }
+  limits[cat] = limits[cat] < filtered(cat).length ? limits[cat] + 6 : 6;
+  renderFeed();
+}
+function resetFilters(){
+  mood = '#전체'; query = ''; $('searchInput').value = ''; $('clearSearch').hidden = true;
+  renderAll();
+}
+
+/* ---- 상세 모달 ---- */
+function openDetail(id){
+  const m = movies.find(x => x.id === id);
+  if (!m) return;
+  const meta = [m.year, m.runtime, m.director ? '감독: ' + m.director : ''].filter(Boolean).join('  |  ');
+  const q = (m.quote || '').trim() ? '<blockquote class="d-quote">“' + esc(m.quote) + '”</blockquote>' : '';
+  const tags = (m.hashtags || []).length ? '<div class="d-tags">' + m.hashtags.map(t => '<span>#' + esc(t) + '</span>').join('') + '</div>' : '';
+  const syn = (m.synopsis || '').trim() ? '<div class="d-sec"><h4>시놉시스</h4><p>' + esc(m.synopsis) + '</p></div>' : '';
+  const g = (m.goodsName || '').trim() ? '<div class="d-goods"><div class="h">' + ic('gift') + '<span>한정판 굿즈 이벤트</span></div><p class="n">' + esc(m.goodsName) + '</p><div class="f"><span>' + (m.goodsTheater ? '증정 극장: ' + esc(m.goodsTheater) : '') + '</span><b>' + esc(m.goodsStatus || '') + '</b></div></div>' : '';
+  /* 검색어는 영화 제목 + " 상영시간표"만 사용합니다 (지역명을 붙이지 않음). */
+  const href = 'https://search.naver.com/search.naver?query=' + encodeURIComponent(m.title + ' 상영시간표');
+  $('detailContent').innerHTML =
+    '<div class="d-head"><div class="d-poster">' + posterHtml(m, true) + '</div><span class="badge">' + (m.category === 'recent' ? '최근 개봉작' : '과거 예술명작') + '</span><h2>' + esc(m.title) + '</h2><p class="d-meta">' + esc(meta) + '</p></div>' +
+    q + tags + syn + g +
+    '<a class="cta" href="' + href + '" target="_blank" rel="noopener noreferrer" data-act="naver">' + ic('clock') + '<span>실시간 상영시간표 바로보기</span>' + ic('ext') + '</a>' +
+    '<p class="cta-note">네이버 검색 결과에서 지역과 극장을 골라 시간을 확인하세요.</p>';
+  openModal('detailModal');
+}
+
+/* ---- 모달 공통 ---- */
+function syncLock(){ document.body.style.overflow = [...document.querySelectorAll('.modal')].some(m => !m.hidden) ? 'hidden' : ''; }
+function openModal(id){ $(id).hidden = false; syncLock(); }
+function closeModal(id){ $(id).hidden = true; syncLock(); }
+
+/* ---- 지역 (표시용 설정) ---- */
+function setRegion(name){ LS.set('sill_region', name); $('locText').textContent = name; }
+function renderRegions(){
+  $('regionGrid').innerHTML = REGIONS.map(r => '<button type="button" data-region="' + esc(r) + '">' + esc(r) + '</button>').join('');
+  const saved = LS.get('sill_region');
+  if (saved) $('locText').textContent = saved;
+}
+function requestGPS(){
+  if (!navigator.geolocation) { toast('이 기기에서는 위치를 확인할 수 없습니다. 지역을 직접 골라주세요.'); return; }
+  $('locText').textContent = '위치 확인 중…';
+  navigator.geolocation.getCurrentPosition(async pos => {
+    try {
+      const r = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + pos.coords.latitude + '&longitude=' + pos.coords.longitude + '&localityLanguage=ko');
+      const d = await r.json();
+      const city = d.city || d.principalSubdivision || '';
+      const area = d.locality || '';
+      const name = (city + ' ' + area).trim() || '내 주변';
+      setRegion(name); closeModal('regionModal');
+    } catch(e) { setRegion('내 주변'); closeModal('regionModal'); }
+  }, () => {
+    $('locText').textContent = LS.get('sill_region') || '지역 선택';
+    toast('위치 권한이 없어 자동 설정하지 못했습니다. 지역을 직접 골라주세요.');
+  }, {timeout:8000});
+}
+
+/* ---- 개발자 인증·콘솔 ---- */
+function openPin(){
+  if (devUnlocked) { openConsole(); return; }
+  $('pinInput').value = ''; $('pinErr').hidden = true; openModal('pinModal');
+  setTimeout(() => $('pinInput').focus(), 50);
+}
+function verifyPin(){
+  if ($('pinInput').value.trim() === PIN) { devUnlocked = true; closeModal('pinModal'); openConsole(); }
+  else { $('pinErr').hidden = false; }
+}
+function openConsole(){
+  const c = getCfg();
+  $('cRepo').value = c.repo || ''; $('cBranch').value = c.branch || 'main'; $('cToken').value = c.token || ''; $('cTmdb').value = tmdbKey();
+  renderManage(); renderStats();
+  devTab(c.token && c.repo ? 'add' : 'links');
+  openModal('devModal');
+}
+function devTab(t){
+  [['add','tabAdd','paneAdd'],['manage','tabManage','paneManage'],['links','tabLinks','paneLinks']].forEach(x => {
+    $(x[1]).className = x[0] === t ? 'on' : '';
+    $(x[2]).hidden = x[0] !== t;
+  });
+  if (t === 'manage') renderManage();
+  if (t === 'links') renderStats();
+}
+function saveCfg(){
+  const cfg = {repo:$('cRepo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '').replace(/\/$/, ''), branch:$('cBranch').value.trim() || 'main', token:$('cToken').value.trim()};
+  LS.set('sill_cfg', JSON.stringify(cfg));
+  LS.set('sill_tmdb', $('cTmdb').value.trim());
+  toast('설정을 저장했습니다.');
+}
+async function testConn(){
+  saveCfg();
+  const cfg = getCfg();
+  if (!cfg.repo || !cfg.token) { toast('저장소와 토큰을 입력해주세요.'); return; }
+  toast('연결 확인 중…', true);
+  try {
+    const r = await fetch('https://api.github.com/repos/' + cfg.repo, {headers:ghHeaders(cfg), cache:'no-store'});
+    if (!r.ok) throw {status:r.status};
+    const d = await r.json();
+    if (d.permissions && d.permissions.push === false) { toast('저장소에는 연결됐지만 쓰기 권한이 없습니다. 토큰의 Contents 권한을 확인해주세요.'); return; }
+    toast('연결됐습니다. 이제 영화를 저장할 수 있어요.');
+  } catch(e) { toast(ghErr(e)); }
+}
+function renderManage(){
+  $('mCount').textContent = movies.length;
+  $('mList').innerHTML = movies.length ? movies.map(m =>
+    '<div class="mrow"><div class="t"><b>' + esc(m.title) + '</b><small>' + (m.category === 'recent' ? '최근' : '명작') + ' · ' + esc(m.year || '연도 미상') + (m.poster ? '' : ' · 포스터 없음') + '</small></div>' +
+    '<button class="ib" type="button" data-act="edit" data-id="' + esc(m.id) + '" aria-label="수정">' + ic('pencil') + '</button>' +
+    '<button class="ib" type="button" data-act="link" data-id="' + esc(m.id) + '" aria-label="영화 링크 복사">' + ic('copy') + '</button>' +
+    (armedId === m.id
+      ? '<button class="ib armed" type="button" data-act="del" data-id="' + esc(m.id) + '">삭제 확인</button>'
+      : '<button class="ib del" type="button" data-act="del" data-id="' + esc(m.id) + '" aria-label="삭제">' + ic('trash') + '</button>') + '</div>'
+  ).join('') : '<p class="hint" style="text-align:center;padding:24px 0">등록된 영화가 없습니다. 영화 추가 탭에서 등록하세요.</p>';
+  $('resetText').textContent = resetArmed ? '한 번 더 눌러 복원' : '초기 데이터 복원';
+}
+function arm(kind, id){
+  armedId = kind === 'del' ? id : null; resetArmed = kind === 'reset';
+  renderManage();
+  clearTimeout(armedTimer);
+  armedTimer = setTimeout(() => { armedId = null; resetArmed = false; renderManage(); }, 4000);
+}
+function resetDefaults(){
+  if (!resetArmed) { arm('reset'); return; }
+  resetArmed = false;
+  saveMovies(clone(DEFAULT_MOVIES), '초기 데이터로 복원했습니다.');
+}
+
+/* ---- 폼 ---- */
+function previewPoster(){
+  const u = $('fPoster').value.trim();
+  $('fThumb').innerHTML = /^https:\/\//.test(u) ? '<img src="' + esc(u) + '" alt="" referrerpolicy="no-referrer">' : ic('image');
+}
+function fillForm(m){
+  $('fCategory').value = m.category; $('fTitle').value = m.title; $('fYear').value = m.year || ''; $('fDirector').value = m.director || '';
+  $('fRuntime').value = m.runtime || ''; $('fQuote').value = m.quote || ''; $('fTags').value = (m.hashtags || []).join(', ');
+  $('fSynopsis').value = m.synopsis || ''; $('fGoodsName').value = m.goodsName || ''; $('fGoodsTheater').value = m.goodsTheater || ''; $('fGoodsStatus').value = m.goodsStatus || '';
+  $('fPoster').value = m.poster || ''; previewPoster();
+}
+function startEdit(id){
+  const m = movies.find(x => x.id === id); if (!m) return;
+  editingId = id; fillForm(m);
+  $('editBanner').hidden = false; $('editBannerText').textContent = '“' + m.title + '” 수정 중';
+  $('fSubmit').textContent = '수정 내용 저장';
+  devTab('add');
+}
+function cancelEdit(){
+  editingId = null; $('movieForm').reset(); previewPoster();
+  $('editBanner').hidden = true; $('fSubmit').textContent = '새 영화 등록하기';
+}
+async function submitMovie(ev){
+  ev.preventDefault();
+  const v = id => $(id).value.trim();
+  const title = v('fTitle');
+  if (!title) { toast('영화 제목을 입력해주세요.'); return; }
+  const tags = []; v('fTags').split(/[,，]/).forEach(t => { t = t.replace(/^#/, '').replace(/\s+/g, ''); if (t && tags.indexOf(t) < 0) tags.push(t); });
+  const item = {
+    id: editingId || ('m-' + Date.now().toString(36)),
+    title: title, category: v('fCategory'), year: v('fYear'), director: v('fDirector'), runtime: v('fRuntime'),
+    poster: v('fPoster'), quote: v('fQuote'), hashtags: tags, synopsis: v('fSynopsis'),
+    goodsName: v('fGoodsName'), goodsTheater: v('fGoodsTheater'), goodsStatus: v('fGoodsStatus')
+  };
+  const wasEdit = !!editingId;
+  const next = wasEdit ? movies.map(m => m.id === editingId ? item : m) : [item].concat(movies);
+  const ok = await saveMovies(next, wasEdit ? '수정했습니다.' : '등록했습니다.');
+  if (ok) { cancelEdit(); devTab('manage'); }
+}
+
+/* ---- 복사 ---- */
+function copyText(text){
+  const done = () => toast('복사했습니다.');
+  const fail = () => toast('복사하지 못했습니다. 직접 복사해주세요: ' + text);
+  try { navigator.clipboard.writeText(text).then(done, fail); } catch(e) { fail(); }
+}
+
+/* ---- 이벤트 ---- */
+document.addEventListener('error', e => {
+  const t = e.target;
+  if (t && t.tagName === 'IMG' && t.dataset && t.dataset.fb) {
+    const m = movies.find(x => x.id === t.dataset.fb);
+    if (m && t.parentElement) t.parentElement.innerHTML = artHtml(m, t.dataset.lg === '1');
+  }
+}, true);
+document.addEventListener('click', e => {
+  const tg = e.target.closest ? e.target : e.target.parentElement;
+  if (!tg) return;
+  if (tg.closest('[data-act="naver"]')) { stats.clicks += 1; saveStats(); return; }
+  const chip = tg.closest('[data-mood]');
+  if (chip) { mood = chip.dataset.mood; limits.recent = 6; limits.past = 6; renderAll(); return; }
+  const reg = tg.closest('[data-region]');
+  if (reg) { setRegion(reg.dataset.region); closeModal('regionModal'); return; }
+  const card = tg.closest('.card[data-id]');
+  if (card) { openDetail(card.dataset.id); return; }
+  const act = tg.closest('[data-act]');
+  if (act) {
+    const id = act.dataset.id;
+    if (act.dataset.act === 'tpick') pickTmdb(parseInt(act.dataset.idx, 10));
+    else if (act.dataset.act === 'edit') startEdit(id);
+    else if (act.dataset.act === 'link') copyText(baseUrl() + '#film-' + id);
+    else if (act.dataset.act === 'del') {
+      if (armedId !== id) arm('del', id);
+      else { armedId = null; saveMovies(movies.filter(m => m.id !== id), '삭제했습니다.'); }
+    }
+    return;
+  }
+  if (tg.classList.contains('modal')) closeModal(tg.id);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const open = [...document.querySelectorAll('.modal')].filter(m => !m.hidden).pop();
+    if (open) closeModal(open.id);
+  }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card')) { e.preventDefault(); openDetail(e.target.dataset.id); }
+  if (e.key === 'Enter' && e.target.id === 'pinInput') verifyPin();
+  if (e.key === 'Enter' && e.target.id === 'tmdbQ') { e.preventDefault(); searchTmdb(); }
+});
+$('searchInput').addEventListener('input', e => {
+  query = e.target.value.trim().toLowerCase();
+  $('clearSearch').hidden = !e.target.value;
+  limits.recent = 6; limits.past = 6;
+  renderFeed();
+});
+$('clearSearch').addEventListener('click', () => { $('searchInput').value = ''; query = ''; $('clearSearch').hidden = true; renderFeed(); });
+window.addEventListener('hashchange', applyHash);
+function applyHash(){
+  const h = (location.hash || '').slice(1);
+  if (h.indexOf('film-') === 0) openDetail(h.slice(5));
+}
+
+/* ---- 시작 ---- */
+(async function start(){
+  renderRegions();
+  initStats();
+  await loadMovies();
+  renderAll();
+  applyHash();
+})();
+</script>
+</body>
+</html>

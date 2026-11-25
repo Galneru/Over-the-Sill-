@@ -1,0 +1,257 @@
+{
+  "updatedAt": "2026-11-25T08:41:38.709Z",
+  "movies": [
+    {
+      "id": "r1",
+      "title": "존 오브 인터레스트",
+      "category": "recent",
+      "year": "2024",
+      "director": "조나단 글레이저",
+      "runtime": "105분",
+      "poster": "",
+      "quote": "평온한 담장 너머의 참혹함을 포착한 서늘하고도 정교한 연출.",
+      "hashtags": [
+        "깊은울림",
+        "섬세한시선"
+      ],
+      "synopsis": "아우슈비츠 수용소 지휘관 루돌프 회스와 그의 아내 헤트비히, 아이들은 수용소 담장 바로 옆 꽃이 만발한 정원이 딸린 집에서 평화로운 나날을 보낸다.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "r2",
+      "title": "퍼펙트 데이즈",
+      "category": "recent",
+      "year": "2024",
+      "director": "빔 벤더스",
+      "runtime": "124분",
+      "poster": "",
+      "quote": "반복되는 일상 속에서 발견하는 빛나는 순간과 깊은 평온.",
+      "hashtags": [
+        "담백한위로",
+        "잔잔한여운"
+      ],
+      "synopsis": "도쿄 공공화장실 청소부 히라야마는 매일 아침 카세트테이프로 올드 팝을 듣고, 필름 카메라로 나무 사이로 스며드는 햇살을 찍으며 평범하지만 충만한 하루를 살아간다.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "r3",
+      "title": "악은 존재하지 않는다",
+      "category": "recent",
+      "year": "2024",
+      "director": "하마구치 류스케",
+      "runtime": "106분",
+      "poster": "",
+      "quote": "자연과 인간, 선과 악의 경계선에서 느껴지는 묵직한 서스펜스.",
+      "hashtags": [
+        "깊은울림",
+        "섬세한시선"
+      ],
+      "synopsis": "도쿄와 가까운 조용한 시골 마을. 개발업자들이 글램핑장을 짓기 위해 찾아오면서 평화롭던 자연과 주민들의 삶에 균열이 시작된다.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "r4",
+      "title": "패스트 라이브즈",
+      "category": "recent",
+      "year": "2024",
+      "director": "셀린 송",
+      "runtime": "105분",
+      "poster": "",
+      "quote": "우리가 스쳐 지나간 인연과 선택하지 않은 삶에 대한 아련한 고백.",
+      "hashtags": [
+        "잔잔한여운",
+        "담백한위로"
+      ],
+      "synopsis": "12살 어린 시절 서울에서 만난 나영과 해성. 24년의 시간이 지나 뉴욕에서 다시 마주한 두 사람의 운명적 사흘.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "r5",
+      "title": "추락의 해부",
+      "category": "recent",
+      "year": "2024",
+      "director": "쥐스틴 트리에",
+      "runtime": "151분",
+      "poster": "",
+      "quote": "관계의 진실을 집요하게 파헤치는 강렬한 시선.",
+      "hashtags": [
+        "섬세한시선",
+        "깊은울림"
+      ],
+      "synopsis": "외딴 샬레에서 남편이 추락사한다. 유일한 목격자는 시각장애를 가진 아들. 아내 산드라는 남편 살해 혐의로 법정에 서게 된다.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "r6",
+      "title": "괴물",
+      "category": "recent",
+      "year": "2023",
+      "director": "고레에다 히로카즈",
+      "runtime": "126분",
+      "poster": "",
+      "quote": "누가 괴물인가. 진실의 다면성을 감동적으로 조명한 거장의 신작.",
+      "hashtags": [
+        "깊은울림",
+        "담백한위로"
+      ],
+      "synopsis": "싱글맘 사오리는 아들 미나토의 행동 이상을 느끼고 학교로 찾아간다. 세 개의 시선으로 풀어내는 한 아이와 두 소년의 비밀.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "r7",
+      "title": "드라이브 마이 카",
+      "category": "recent",
+      "year": "2021",
+      "director": "하마구치 류스케",
+      "runtime": "179분",
+      "poster": "",
+      "quote": "상처를 품고 달리는 빨간 사브 안에서 나누는 조용한 치유.",
+      "hashtags": [
+        "잔잔한여운",
+        "담백한위로"
+      ],
+      "synopsis": "아내의 갑작스러운 죽음 이후 상실감에 빠진 연극 연출가 가후쿠. 운전기사 미사키와의 드라이브를 통해 아픔을 직면한다.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "r8",
+      "title": "에브리씽 에브리웨어 올 앳 원스",
+      "category": "recent",
+      "year": "2022",
+      "director": "다니엘 콴, 다니엘 샤이너트",
+      "runtime": "139분",
+      "poster": "",
+      "quote": "다중우주 속에서 다정한 사랑을 포옹하는 상상력의 절정.",
+      "hashtags": [
+        "담백한위로",
+        "깊은울림"
+      ],
+      "synopsis": "미국에 이민 와 세탁소를 운영하던 에블린이 어느 날 다중우주를 넘나들며 세상을 구하고 딸과의 관계를 돌아보게 된다.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "p1",
+      "title": "윤희에게",
+      "category": "past",
+      "year": "2019",
+      "director": "임대형",
+      "runtime": "105분",
+      "poster": "",
+      "quote": "눈 덮인 오타루에서 도착한 편지, 잊혀진 마음의 온기.",
+      "hashtags": [
+        "잔잔한여운",
+        "담백한위로"
+      ],
+      "synopsis": "우연히 엄마 윤희에게 온 편지를 읽은 딸 새봄이 편지의 발신인이 있는 오타루로 여행을 제안하며 벌어지는 아련하고 따뜻한 여정.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "p2",
+      "title": "벌새",
+      "category": "past",
+      "year": "2019",
+      "director": "김보라",
+      "runtime": "138분",
+      "poster": "",
+      "quote": "1994년, 세상이 무너지던 해 나에게 다가온 따뜻한 영지 선생님.",
+      "hashtags": [
+        "깊은울림",
+        "섬세한시선"
+      ],
+      "synopsis": "성수대교가 무너졌던 1994년, 알 수 없는 거대한 세상 속에서 자신의 날갯짓을 찾아가는 14살 은희의 보편적이고 찬란한 이야기.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "p3",
+      "title": "타오르는 여인의 초상",
+      "category": "past",
+      "year": "2020",
+      "director": "셀린 시아마",
+      "runtime": "122분",
+      "poster": "",
+      "quote": "후회하지 말고 기억해. 서로를 바라보았던 찬란한 응시의 시선.",
+      "hashtags": [
+        "섬세한시선",
+        "깊은울림"
+      ],
+      "synopsis": "원치 않는 결혼을 앞둔 귀족 여성 엘로이즈와 그녀의 초상화를 비밀리에 그려야 하는 화가 마리안느의 뜨거운 사랑.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "p4",
+      "title": "소공녀",
+      "category": "past",
+      "year": "2018",
+      "director": "전고운",
+      "runtime": "106분",
+      "poster": "",
+      "quote": "집은 없어도 취향은 명확한 미소의 위풍당당 도시 유랑기.",
+      "hashtags": [
+        "담백한위로",
+        "잔잔한여운"
+      ],
+      "synopsis": "위스키, 담배, 사랑하는 남자친구만 있다면 바랄 게 없는 가사도우미 미소. 집세가 오르자 집을 포기하고 친구들의 집을 찾아 떠난다.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "p5",
+      "title": "화양연화",
+      "category": "past",
+      "year": "2000",
+      "director": "왕가위",
+      "runtime": "99분",
+      "poster": "",
+      "quote": "가장 아름답고 찬란했던 시절, 차마 입 밖으로 내지 못한 비밀.",
+      "hashtags": [
+        "잔잔한여운",
+        "섬세한시선"
+      ],
+      "synopsis": "같은 날 같은 아파트로 이사 온 첸 부인과 차우. 각자의 배우자가 외도를 하고 있다는 비밀을 공유하며 둘 사이에 서서히 피어나는 감정.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    },
+    {
+      "id": "p6",
+      "title": "플로리다 프로젝트",
+      "category": "past",
+      "year": "2018",
+      "director": "션 베이커",
+      "runtime": "111분",
+      "poster": "",
+      "quote": "파스텔톤 매직 캐슬 너머의 현실, 그 속에서 피어나는 무지갯빛 아이들.",
+      "hashtags": [
+        "깊은울림",
+        "담백한위로"
+      ],
+      "synopsis": "디즈니월드 건너편 모텔 '매직 캐슬'에 사는 6살 장난꾸러기 무니와 친구들의 찬란하고 아련한 여름방학.",
+      "goodsName": "",
+      "goodsTheater": "",
+      "goodsStatus": ""
+    }
+  ]
+}
