@@ -520,6 +520,8 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const ic = (n, c) => '<svg class="ic' + (c ? ' ' + c : '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>';
 const clone = o => JSON.parse(JSON.stringify(o));
+/* 검색 비교용: 띄어쓰기·문장부호를 빼고 소문자로 */
+const norm = s => String(s == null ? '' : s).toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, '');
 const hashStr = s => { let h = 0; for (const ch of String(s)) h = (h * 31 + ch.codePointAt(0)) >>> 0; return h; };
 const LS = {
   get(k){ try { return localStorage.getItem(k); } catch(e) { return null; } },
@@ -671,12 +673,25 @@ function scheduleExt(){
 async function searchExt(q){
   const seq = ++extSeq;
   try {
-    const [mv, pp] = await Promise.all([
-      tmdb('/search/movie', {query:q, include_adult:'false'}),
-      tmdb('/search/person', {query:q, include_adult:'false'}).catch(() => ({results:[]}))
+    /* 띄어쓰기가 달라도 찾도록: 입력 그대로, 띄어쓰기를 뺀 검색어로 먼저 찾고,
+       부족하면 앞글자로 넓게 찾은 뒤 띄어쓰기를 무시하고 제목을 비교합니다. */
+    const safe = p => p.catch(() => ({results:[]}));
+    const q2 = q.replace(/\s+/g, '');
+    const qs = q2 !== q ? [q, q2] : [q];
+    const qn = norm(q);
+    const hit = x => norm(x.title).indexOf(qn) > -1 || norm(x.original_title).indexOf(qn) > -1;
+    const [mvs, pps] = await Promise.all([
+      Promise.all(qs.map(x => tmdb('/search/movie', {query:x, include_adult:'false'}))),
+      Promise.all(qs.map(x => safe(tmdb('/search/person', {query:x, include_adult:'false'}))))
     ]);
-    let list = (mv.results || []).slice(0, 12);
-    const dirs = (pp.results || []).filter(p => p.known_for_department === 'Directing').slice(0, 2);
+    let list = [].concat(...mvs.map(d => (d.results || []).slice(0, 12)));
+    if (qn.length >= 2 && list.filter(hit).length < 3) {
+      const reqs = [];
+      for (let n = 1; n <= Math.min(q2.length - 1, 5); n++) [1, 2].forEach(pg => reqs.push(safe(tmdb('/search/movie', {query:q2.slice(0, n), include_adult:'false', page:pg}))));
+      (await Promise.all(reqs)).forEach(d => (d.results || []).forEach(x => { if (hit(x)) list.push(x); }));
+    }
+    const pseen = {};
+    const dirs = [].concat(...pps.map(d => d.results || [])).filter(p => p.known_for_department === 'Directing' && !pseen[p.id] && (pseen[p.id] = true)).slice(0, 2);
     for (const p of dirs) {
       const c = await tmdb('/person/' + p.id + '/movie_credits', {});
       const directed = (c.crew || []).filter(x => x.job === 'Director' && !x.adult).sort((a, b) => (b.popularity || 0) - (a.popularity || 0)).slice(0, 12);
@@ -684,7 +699,7 @@ async function searchExt(q){
     }
     if (seq !== extSeq) return;
     const seen = {};
-    list = list.filter(x => x && x.id && !seen[x.id] && (seen[x.id] = true)).sort((a, b) => (b.popularity || 0) - (a.popularity || 0)).slice(0, 20);
+    list = list.filter(x => x && x.id && !seen[x.id] && (seen[x.id] = true)).sort((a, b) => (hit(b) - hit(a)) || ((b.popularity || 0) - (a.popularity || 0))).slice(0, 20);
     const status = $('extStatus');
     if (!list.length) { status.hidden = false; status.textContent = '“' + q + '”에 맞는 영화를 찾지 못했습니다.'; $('extGrid').innerHTML = ''; return; }
     status.hidden = true;
@@ -856,7 +871,7 @@ function filtered(cat){
   let list = movies.filter(m => m.category === cat);
   if (mood === '#굿즈증정') list = list.filter(m => (m.goodsName || '').trim());
   else if (mood !== '#전체') { const t = mood.slice(1); list = list.filter(m => (m.hashtags || []).indexOf(t) > -1); }
-  if (query) list = list.filter(m => [m.title, m.director, m.quote, (m.hashtags || []).join(' ')].join(' ').toLowerCase().indexOf(query) > -1);
+  if (query) { const qn = norm(query); if (qn) list = list.filter(m => norm([m.title, m.director, m.quote, (m.hashtags || []).join(' ')].join(' ')).indexOf(qn) > -1); }
   return list;
 }
 function artHtml(m, lg){
@@ -871,7 +886,9 @@ function posterHtml(m, lg){
 }
 function cardHtml(m){
   const meta = [m.year, m.runtime, m.director ? '감독 ' + m.director : ''].filter(Boolean).join(' · ');
-  const q = (m.quote || '').trim() ? '<p class="quote">“' + esc(m.quote) + '”</p>' : '';
+  /* 한줄평이 없으면 줄거리를 미리보기로 보여줍니다. */
+  const q = (m.quote || '').trim() ? '<p class="quote">“' + esc(m.quote) + '”</p>'
+    : (m.synopsis || '').trim() ? '<p class="x-ov" style="-webkit-line-clamp:3">' + esc(m.synopsis) + '</p>' : '';
   const tags = (m.hashtags || []).length ? '<div class="tags">' + m.hashtags.map(t => '<span>#' + esc(t) + '</span>').join('') + '</div>' : '';
   const g = (m.goodsName || '').trim() ? '<div class="goods">' + ic('gift') + '<b>' + esc(m.goodsName) + '</b>' + (m.goodsStatus ? '<i>' + esc(m.goodsStatus) + '</i>' : '') + '</div>' : '';
   return '<article class="card" role="button" tabindex="0" data-id="' + esc(m.id) + '"><div class="poster">' + posterHtml(m, false) + '</div><div class="info"><div><div class="meta">' + esc(meta) + '</div><h3>' + esc(m.title) + '</h3>' + q + tags + '</div>' + g + '</div></article>';
