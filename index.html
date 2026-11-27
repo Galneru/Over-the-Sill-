@@ -145,12 +145,18 @@ img{max-width:100%}
 @media (min-width:520px){.modal{align-items:center;padding:16px}.sheet{border-radius:16px}}
 .x{position:absolute;right:12px;top:12px;width:36px;height:36px;border-radius:50%;background:var(--espresso);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-2);z-index:2}
 /* 큰 이미지 카드 */
-.card.big{display:block;padding:0;overflow:hidden;border-radius:16px}
-.hero{position:relative;height:208px;background:var(--elevated);overflow:hidden}
+.card.big{display:block;padding:0;overflow:hidden;border-radius:16px;isolation:isolate;transition:border-color .25s ease,box-shadow .25s ease}
+.hero{position:relative;height:208px;background:var(--elevated);overflow:hidden;border-radius:15px 15px 0 0;isolation:isolate;-webkit-mask-image:-webkit-radial-gradient(white,black)}
 .hero-img{position:absolute;inset:0}
 .hero-img img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block;opacity:.85;transition:transform .5s ease}
 .hero-img .art,.d-bd .art{border:0;border-radius:0}
-@media (hover:hover){.card.big:hover .hero-img img{transform:scale(1.04)}}
+/* 큰 카드는 들어 올리지 않고 테두리·그림자와 이미지 확대만 (모서리 깨짐 방지) */
+@media (hover:hover){
+  .card.big:hover{transform:none;border-color:var(--gold-line);box-shadow:0 10px 28px rgba(0,0,0,.45)}
+  .card.big:hover .hero-img img{transform:scale(1.03)}
+  .seg button:not(.on):hover{color:var(--text);background:rgba(212,163,89,.1)}
+}
+.hero-img img{will-change:transform;backface-visibility:hidden}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--paper) 0%,rgba(27,24,21,.45) 45%,rgba(27,24,21,0) 75%);pointer-events:none}
 .hero-tag{position:absolute;top:12px;left:12px;z-index:1;font-size:11.5px;font-weight:500;color:var(--gold);background:rgba(18,16,14,.88);border:1px solid var(--gold-line);padding:4px 10px;border-radius:999px}
 .hero-q{position:absolute;left:16px;right:16px;bottom:10px;z-index:1;margin:0;font:italic 400 13.5px/1.55 var(--serif);color:var(--text);text-shadow:0 1px 8px rgba(0,0,0,.7);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -434,7 +440,7 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.55}
     <div id="paneAdd">
       <div class="box" style="margin-bottom:12px">
         <span class="lbl">영화 정보 불러오기 (TMDB)</span>
-        <p class="hint">제목으로 검색해 고르면 아래 칸(연도·감독·러닝타임·포스터·스틸컷·줄거리·예고편)이 자동으로 채워집니다.</p>
+        <p class="hint">제목으로 검색해 고르면 아래 칸(연도·감독·러닝타임·포스터·스틸컷·줄거리·예고편, TMDB 한줄 소개가 있으면 한줄평까지)이 자동으로 채워집니다.</p>
         <div class="srow">
           <input id="tmdbQ" class="in" type="text" placeholder="영화 제목 (예: 존 오브 인터레스트)" aria-label="TMDB 검색어">
           <button class="btn gold sm" type="button" onclick="searchTmdb()">검색</button>
@@ -507,7 +513,7 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.55}
           <button class="mini" type="button" onclick="fillMissing()"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg>포스터·감독 자동 채우기</button>
           <button id="resetBtn" class="mini plain" type="button" onclick="resetDefaults()"><svg class="ic" aria-hidden="true"><use href="#i-undo"/></svg><span id="resetText">초기 데이터 복원</span></button>
         </div></div>
-      <p class="hint" style="margin:-2px 0 12px"><b style="color:var(--text-2)">포스터·감독 자동 채우기</b>는 포스터, 스틸컷, 감독, 러닝타임이 비어 있는 영화를 TMDB에서 찾아 채우고 바로 저장합니다. 이미 입력한 내용은 바꾸지 않습니다. <b style="color:var(--text-2)">초기 데이터 복원</b>은 목록을 처음 14편으로 되돌립니다.</p>
+      <p class="hint" style="margin:-2px 0 12px"><b style="color:var(--text-2)">포스터·감독 자동 채우기</b>는 포스터, 스틸컷, 감독, 러닝타임, 한줄평이 비어 있는 영화를 TMDB에서 찾아 채우고 바로 저장합니다. 이미 입력한 내용은 바꾸지 않습니다. <b style="color:var(--text-2)">초기 데이터 복원</b>은 목록을 처음 14편으로 되돌립니다.</p>
       <div id="mList" class="mlist"></div>
     </div>
 
@@ -836,6 +842,7 @@ async function openTmdbDetail(id){
     $('detailContent').innerHTML =
       '<div class="d-hero"><div class="d-bd">' + bd + '</div><div class="d-hero-in"><div class="d-poster">' + extPoster(d, true) + '</div>' +
       '<div class="d-hero-t"><span class="badge">모든 영화 검색</span><h2>' + esc(title) + '</h2><p class="d-meta">' + esc(meta) + '</p></div></div></div>' +
+      ((d.tagline || '').trim() ? '<blockquote class="d-quote">“' + esc(d.tagline.trim()) + '”</blockquote>' : '') +
       tags + syn +
       '<a class="cta" href="' + href + '" target="_blank" rel="noopener noreferrer" data-act="naver">' + ic('clock') + '<span>실시간 상영시간표 바로보기</span>' + ic('ext') + '</a>' +
       trailerBtnHtml(title, '') + addBtn +
@@ -858,6 +865,7 @@ async function addExtToForm(id){
     $('fPoster').value = d.poster_path ? TMDB_IMG + d.poster_path : ''; previewPoster();
     $('fStill').value = d.backdrop_path ? 'https://image.tmdb.org/t/p/w780' + d.backdrop_path : ''; previewStill();
     $('fSynopsis').value = d.overview || '';
+    $('fQuote').value = (d.tagline || '').trim();
     try { $('fTrailer').value = (await trailerUrl(d.id)) || ''; } catch(e) {}
     closeModal('detailModal'); openConsole('add');
     toast('채웠습니다. 한줄평과 해시태그를 입력하고 등록하세요.');
@@ -900,6 +908,8 @@ async function pickTmdb(idx){
     $('fPoster').value = d.poster_path ? TMDB_IMG + d.poster_path : ''; previewPoster();
     $('fStill').value = d.backdrop_path ? 'https://image.tmdb.org/t/p/w780' + d.backdrop_path : ''; previewStill();
     if (d.overview) $('fSynopsis').value = d.overview;
+    /* TMDB 한줄 소개(tagline)를 큐레이터 한줄평으로. 없으면 비워둠 */
+    $('fQuote').value = (d.tagline || '').trim();
     try { const t = await trailerUrl(d.id); if (t) $('fTrailer').value = t; } catch(e) {}
     $('tmdbRes').hidden = true;
     toast('채웠습니다. 한줄평과 해시태그를 입력하고 등록하세요.');
@@ -911,7 +921,7 @@ async function fillMissing(){
   let changed = 0;
   toast('TMDB에서 빈 정보를 찾는 중…', true);
   for (const m of next) {
-    if (m.poster && m.still && m.director && m.runtime && m.tmdbId) continue;
+    if (m.poster && m.still && m.director && m.runtime && m.tmdbId && (m.quote || '').trim()) continue;
     try {
       const s = await tmdb('/search/movie', {query:m.title});
       const y = parseInt(m.year, 10) || 0;
@@ -924,6 +934,7 @@ async function fillMissing(){
       if (!m.still && d.backdrop_path) { m.still = 'https://image.tmdb.org/t/p/w780' + d.backdrop_path; did = true; }
       if (!m.director && directorsOf(d)) { m.director = directorsOf(d); did = true; }
       if (!m.runtime && d.runtime) { m.runtime = d.runtime + '분'; did = true; }
+      if (!(m.quote || '').trim() && (d.tagline || '').trim()) { m.quote = d.tagline.trim(); did = true; }
       if (did) changed++;
     } catch(e) {
       if (e && (e.nokey || e.status === 401)) { toast(tmdbErr(e)); return; }
@@ -1054,7 +1065,8 @@ function cardHtml(m){
   /* 한줄평이 없으면 줄거리를 미리보기로 보여줍니다. */
   const q = (m.quote || '').trim() ? '<p class="hero-q">“' + esc(m.quote) + '”</p>'
     : (m.synopsis || '').trim() ? '<p class="hero-q syn">' + esc(m.synopsis) + '</p>' : '';
-  const tags = tagsArr.length > 1 ? '<div class="tags" style="margin:0">' + tagsArr.slice(1).map(t => '<span>#' + esc(t) + '</span>').join('') + '</div>' : '';
+  /* 위(이미지)에는 첫 태그 하나, 아래에는 선택한 태그 전부 */
+  const tags = tagsArr.length ? '<div class="tags" style="margin:0">' + tagsArr.map(t => '<span>#' + esc(t) + '</span>').join('') + '</div>' : '';
   /* 굿즈를 입력하지 않은 영화는 굿즈 상자를 보여주지 않습니다. */
   const g = (m.goodsName || '').trim() ? '<div class="goods">' + ic('gift') + '<b>' + esc(m.goodsName) + '</b>' + (m.goodsStatus ? '<i>' + esc(m.goodsStatus) + '</i>' : '') + '</div>' : '';
   return '<article class="card big" role="button" tabindex="0" data-id="' + esc(m.id) + '">' +
