@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-25T15:07:46.482Z",
+  "updatedAt": "2026-11-27T12:51:52.323Z",
   "movies": [
     {
       "id": "m-mww9cl9s",
@@ -9,9 +9,14 @@
       "director": "쥐스틴 트리에",
       "runtime": "150분",
       "poster": "https://image.tmdb.org/t/p/w500/jNo7cLV1Hzhzouf5hOXtv8lciXY.jpg",
+      "still": "",
+      "rerelease": false,
       "trailer": "https://www.youtube.com/watch?v=VMBCqyg2qZ8",
       "quote": "",
-      "hashtags": [],
+      "hashtags": [
+        "검증된명작",
+        "섬세한시선"
+      ],
       "synopsis": "산드라와 사뮈엘은 시각 장애가 있는 아들 다니엘과 함께 프랑스 알프스의 외딴 산장에서 살고 있다. 갑작스러운 사뮈엘의 죽음 이후, 그의 죽음이 자살인지 혹은 범죄에 연루된 것인지를 밝히는 조사는 점차 미궁으로 빠지게 되는데...",
       "goodsName": "",
       "goodsTheater": "",
